@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0D2547">
+<title>산란계 솔루션</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D2547;--navy-light:#1a3a6b;--navy-dark:#071630;
+  --gold:#C9A84C;--white:#fff;
+  --gray-50:#f8f9fa;--gray-100:#f1f3f4;--gray-200:#e8eaed;
+  --gray-300:#dadce0;--gray-400:#bdc1c6;--gray-500:#9aa0a6;
+  --gray-600:#5f6368;--gray-700:#3c4043;
+  --text:#1a1a2e;--radius:8px;
+  --shadow:0 2px 8px rgba(0,0,0,0.12);--shadow-lg:0 4px 20px rgba(0,0,0,0.15);
+}
+body{font-family:'Pretendard',sans-serif;background:#f0f2f5;color:var(--text);min-height:100vh}
+button{cursor:pointer;font-family:'Pretendard',sans-serif}
+input,select,textarea{font-family:'Pretendard',sans-serif}
+
+/* ── Layout ── */
+.app{min-height:100vh;display:flex;flex-direction:column}
+.header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1200px;margin:0 auto;width:100%}
+.header-title{font-size:20px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+.header-title i{color:var(--gold);font-size:22px}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.7)}
+.breadcrumb span{cursor:pointer;transition:.2s}
+.breadcrumb span:hover{color:#fff}
+.breadcrumb .sep{color:rgba(255,255,255,.4)}
+.breadcrumb .current{color:#fff;font-weight:500}
+.page{flex:1;max-width:1200px;margin:0 auto;width:100%;padding:24px 20px}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--radius);font-size:14px;font-weight:500;border:none;transition:.2s;cursor:pointer}
+.btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:var(--navy-light)}
+.btn-secondary{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}.btn-secondary:hover{background:var(--gray-50)}
+.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{background:#b8973e}
+.btn-ghost{background:transparent;color:var(--navy);border:1px solid var(--gray-300)}.btn-ghost:hover{background:var(--gray-50)}
+.btn-danger{background:#dc3545;color:#fff}.btn-danger:hover{background:#c82333}
+.btn-sm{padding:6px 12px;font-size:13px}
+
+/* ── Cards ── */
+.card{background:#fff;border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.card-header{padding:18px 22px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between}
+.card-header h2{font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px;color:var(--navy)}
+.card-body{padding:22px}
+
+/* ── Form ── */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px}
+.form-control{width:100%;padding:9px 12px;border:1.5px solid var(--gray-300);border-radius:var(--radius);font-size:14px;color:var(--text);transition:.2s;background:#fff}
+.form-control:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(13,37,71,.1)}
+.form-control::placeholder{color:var(--gray-400)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-navy{background:rgba(13,37,71,.1);color:var(--navy)}
+.badge-gold{background:rgba(201,168,76,.15);color:#8a6f2e}
+.badge-green{background:#e6f4ea;color:#137333}
+.badge-red{background:#fce8e6;color:#c5221f}
+.badge-blue{background:#e8f0fe;color:#1967d2}
+.badge-gray{background:var(--gray-100);color:var(--gray-700)}
+
+/* ── Table ── */
+.table{width:100%;border-collapse:collapse}
+.table th{background:var(--gray-50);padding:10px 14px;font-size:12px;font-weight:600;color:var(--gray-600);text-align:left;border-bottom:1px solid var(--gray-200)}
+.table td{padding:12px 14px;border-bottom:1px solid var(--gray-100);font-size:14px}
+.table tr:hover td{background:var(--gray-50)}
+.table tr:last-child td{border-bottom:none}
+
+/* ── Tabs ── */
+.tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:24px}
+.tab{padding:12px 20px;font-size:14px;font-weight:500;color:var(--gray-600);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.2s;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--navy)}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy);font-weight:600}
+
+/* ── Info box ── */
+.info-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 18px}
+.info-row{display:flex;gap:6px;margin-bottom:8px;font-size:14px}
+.info-row:last-child{margin-bottom:0}
+.info-label{color:var(--gray-600);min-width:90px;font-size:13px}
+.info-value{font-weight:500;color:var(--text)}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
+.modal-header h3{font-size:16px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:8px}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:8px}
+.close-btn{background:none;border:none;font-size:20px;color:var(--gray-400);cursor:pointer;padding:4px;border-radius:4px;transition:.2s}
+.close-btn:hover{color:var(--gray-700);background:var(--gray-100)}
+
+/* ── Farm card ── */
+.farm-card{background:#fff;border-radius:12px;padding:16px;cursor:pointer;transition:.25s;border:2px solid transparent;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.farm-card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.farm-card-initial{width:44px;height:44px;border-radius:10px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin-bottom:10px}
+.farm-card-name{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.farm-card-owner{font-size:13px;color:var(--gray-600)}
+.farm-card-meta{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+
+/* ── Search ── */
+.search-box{position:relative;margin-bottom:20px}
+.search-box i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:16px}
+.search-box input{padding-left:38px;height:44px;border-radius:22px;border:1.5px solid var(--gray-300);width:100%}
+.search-box input:focus{border-color:var(--navy)}
+
+/* ── Flock row ── */
+.flock-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:.15s}
+.flock-row:hover{background:var(--gray-50)}
+.flock-row:last-child{border-bottom:none}
+.flock-badge{width:36px;height:36px;border-radius:8px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+
+/* ── Consulting ── */
+.consulting-item{background:#fff;border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid var(--navy)}
+.consulting-date{font-size:12px;color:var(--gray-500);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+
+/* ── Post ── */
+.post-item{padding:16px 20px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:.15s;display:flex;align-items:flex-start;gap:14px}
+.post-item:hover{background:var(--gray-50)}
+.post-tag{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;margin-top:2px}
+.post-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.post-meta{font-size:12px;color:var(--gray-500)}
+.kw-tag{background:var(--gray-100);color:var(--gray-600);padding:2px 7px;border-radius:4px;font-size:11px;margin-right:3px}
+
+/* ── Stat mini ── */
+.stat-mini{background:var(--gray-50);border-radius:var(--radius);padding:12px 14px;text-align:center}
+.stat-mini-val{font-size:20px;font-weight:700;color:var(--navy)}
+.stat-mini-lbl{font-size:11px;color:var(--gray-500);margin-top:2px}
+
+/* ── Loading / Toast ── */
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;gap:14px}
+.spinner{width:40px;height:40px;border:3px solid var(--gray-200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--navy);font-weight:500}
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 18px;border-radius:var(--radius);font-size:14px;font-weight:500;color:#fff;box-shadow:var(--shadow-lg);animation:slideUp .3s ease;min-width:200px}
+.toast.success{background:#137333}
+.toast.error{background:#c5221f}
+.toast.info{background:var(--navy)}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Setup banner ── */
+.setup-banner{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start}
+.setup-banner i{color:#d97706;margin-top:2px;flex-shrink:0}
+
+/* ── Notice ── */
+.notice{background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:12px 16px;font-size:13px;color:#1e40af;display:flex;align-items:flex-start;gap:8px;margin-bottom:16px}
+
+/* ── Misc ── */
+.page-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-top h1{font-size:22px;font-weight:700;color:var(--navy)}
+.empty{text-align:center;padding:48px 24px;color:var(--gray-500)}
+.empty i{font-size:48px;color:var(--gray-300);margin-bottom:12px;display:block}
+.empty p{font-size:14px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .25s ease}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:3px}
+@media(max-width:900px){.grid-5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.grid-5{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-title"><i class="fas fa-egg"></i>산란계 솔루션</div>
+      <div id="breadcrumb-area" class="breadcrumb"></div>
+    </div>
+  </div>
+  <div class="page fade-in" id="main-content"></div>
+</div>
+<div id="modal-container"></div>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ================================================================
+// ★ 설정 영역 - 배포 후 아래 두 값을 반드시 수정하세요.
+// ================================================================
+const CONFIG = {
+  // Google Apps Script 웹앱 배포 후 받은 URL을 여기에 붙여넣으세요.
+  GAS_URL: 'https://script.google.com/macros/s/AKfycbzYWDyPkTE61uMy98dgx69vdVlT65uiu4mTm260isl_GmY0UxkiQtZ4X5EqYq12nrGI/exec',
+  // Code.gs 의 SECRET_TOKEN 과 동일한 값으로 설정하세요.
+  GAS_TOKEN: 'seoulfeed1981',
+};
+// ================================================================
+
+// ── GAS API 클라이언트 ──────────────────────────────────────────
+const API = {
+  async call(action, payload = {}) {
+    const body = { action, token: CONFIG.GAS_TOKEN, ...payload };
+    // GAS는 POST body JSON 파싱을 위해 row는 문자열로 전송
+    if (body.row && typeof body.row === 'object') {
+      body.row = JSON.stringify(body.row);
+    }
+    const res = await fetch(CONFIG.GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // GAS CORS 우회
+      body: JSON.stringify(body),
+      redirect: 'follow',
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error || '서버 오류');
+    return json;
+  },
+  // 초기화
+  init:            ()       => API.call('initSheets'),
+  // 농장
+  getFarms:        ()       => API.call('getFarms'),
+  saveFarm:        (row)    => API.call('saveFarm',    { row }),
+  deleteFarm:      (id)     => API.call('deleteFarm',  { id }),
+  // 계군
+  getFlocks:       ()       => API.call('getFlocks'),
+  saveFlock:       (row)    => API.call('saveFlock',   { row }),
+  deleteFlock:     (id)     => API.call('deleteFlock', { id }),
+  // 컨설팅
+  getConsulting:   ()       => API.call('getConsulting'),
+  saveConsulting:  (row)    => API.call('saveConsulting',  { row }),
+  deleteConsulting:(id)     => API.call('deleteConsulting',{ id }),
+  // 성적
+  getPerformance:  ()       => API.call('getPerformance'),
+  savePerformance: (row)    => API.call('savePerformance', { row }),
+  deletePerformance:(id)    => API.call('deletePerformance',{ id }),
+  // 기술정보
+  getTech:         ()       => API.call('getTech'),
+  saveTech:        (row)    => API.call('saveTech',    { row }),
+  deleteTech:      (id)     => API.call('deleteTech',  { id }),
+};
+
+// ── 로컬 캐시 (앱 실행 중 메모리 유지) ────────────────────────
+let DB = { farms:[], flocks:[], consulting:[], performance:[], tech:[] };
+let isConfigured = CONFIG.GAS_URL.includes('YOUR_SCRIPT_ID') === false;
+
+// ── 앱 상태 ────────────────────────────────────────────────────
+let S = {
+  page: 'main',
+  farmId: null,
+  flockId: null,
+  tab: 'consulting',
+  searchQ: '',
+  techSearch: '',
+  showTechPost: null,
+  modal: null,      // 현재 열린 모달 이름
+  modalData: {},    // 모달에 필요한 데이터
+};
+
+// ── 유틸 ───────────────────────────────────────────────────────
+const today  = () => new Date().toISOString().split('T')[0];
+const uid    = () => 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+const fmt    = d => { if(!d) return '-'; const p=String(d).split('-'); return p.length===3?`${p[0]}.${p[1]}.${p[2]}`:d; };
+const daysSince = ds => Math.floor((Date.now() - new Date(ds)) / 86400000);
+const calcWeek  = ds => Math.floor(daysSince(ds) / 7);
+const numFmt    = n  => Number(n).toLocaleString();
+
+// ── Toast ──────────────────────────────────────────────────────
+function toast(msg, type='info') {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ── Loading ────────────────────────────────────────────────────
+function showLoading(msg='불러오는 중...') {
+  let el = document.getElementById('loading-overlay');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'loading-overlay';
+    el.className = 'loading-overlay';
+    el.innerHTML = `<div class="spinner"></div><div class="loading-text">${msg}</div>`;
+    document.body.appendChild(el);
+  } else {
+    el.querySelector('.loading-text').textContent = msg;
+    el.style.display = 'flex';
+  }
+}
+function hideLoading() {
+  const el = document.getElementById('loading-overlay');
+  if (el) el.style.display = 'none';
+}
+
+// ── 데이터 로드 ────────────────────────────────────────────────
+async function loadAll() {
+  if (!isConfigured) return;
+  showLoading('구글시트에서 데이터를 불러오는 중...');
+  try {
+    const [farms, flocks, consulting, performance, tech] = await Promise.all([
+      API.getFarms(), API.getFlocks(), API.getConsulting(),
+      API.getPerformance(), API.getTech(),
+    ]);
+    DB.farms       = farms.data       || [];
+    DB.flocks      = flocks.data      || [];
+    DB.consulting  = consulting.data  || [];
+    DB.performance = performance.data || [];
+    DB.tech        = tech.data        || [];
+    toast('데이터를 불러왔습니다.', 'success');
+  } catch(e) {
+    toast('데이터 로드 실패: ' + e.message, 'error');
+  } finally {
+    hideLoading();
+    render();
+  }
+}
+
+// ── 라우터 ─────────────────────────────────────────────────────
+function nav(page, extra = {}) {
+  S = { ...S, page, modal: null, showTechPost: null, ...extra };
+  render();
+  window.scrollTo(0, 0);
+}
+
+function render() {
+  const c = document.getElementById('main-content');
+  c.className = 'page fade-in';
+  updateBreadcrumb();
+  if      (S.page === 'main')  renderMain(c);
+  else if (S.page === 'farm')  renderFarm(c);
+  else if (S.page === 'flock') renderFlock(c);
+  else if (S.page === 'tech')  renderTech(c);
+  renderModal();
+}
+
+function updateBreadcrumb() {
+  const el = document.getElementById('breadcrumb-area');
+  if (S.page === 'main') { el.innerHTML = ''; return; }
+  let html = `<span onclick="nav('main')"><i class="fas fa-home"></i></span><span class="sep">›</span>`;
+  if (S.page === 'tech') {
+    html += `<span class="current">기술정보</span>`;
+  } else if (S.page === 'farm') {
+    const f = DB.farms.find(x => x.id === S.farmId);
+    html += `<span class="current">${f ? f.name : ''}</span>`;
+  } else if (S.page === 'flock') {
+    const f  = DB.farms.find(x => x.id === S.farmId);
+    const fk = DB.flocks.find(x => x.id === S.flockId);
+    html += `<span onclick="nav('farm',{farmId:'${S.farmId}'})">${f ? f.name : ''}</span>`;
+    html += `<span class="sep">›</span><span class="current">${fk ? fk.dong : ''}</span>`;
+  }
+  el.innerHTML = html;
+}
+
+// ── 메인 페이지 ────────────────────────────────────────────────
+function renderMain(c) {
+  const q = S.searchQ.toLowerCase();
+  const sorted = [...DB.farms].sort((a,b) => a.name.localeCompare(b.name, 'ko'));
+  const results = q ? sorted.filter(f =>
+    (f.name||'').toLowerCase().includes(q) || (f.owner||'').toLowerCase().includes(q)
+  ) : null;
+  const topFarms = sorted.slice(0, 10);
+
+  const gasWarning = !isConfigured ? `
+    <div class="setup-banner">
+      <i class="fas fa-triangle-exclamation"></i>
+      <div>
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px">구글시트 연동 설정 필요</div>
+        <div style="font-size:13px;color:var(--gray-700)">
+          이 앱은 Google Sheets와 연동됩니다. 사용 전 아래 두 단계를 완료하세요.<br>
+          1. <b>Code.gs</b>를 Google Apps Script에 붙여넣고 웹앱으로 배포<br>
+          2. 이 HTML 파일 상단 <code>CONFIG.GAS_URL</code>에 배포 URL 입력
+        </div>
+        <button class="btn btn-gold btn-sm" style="margin-top:10px" onclick="openInitModal()">
+          <i class="fas fa-database"></i> 시트 초기화 (배포 후)
+        </button>
+      </div>
+    </div>` : '';
+
+  c.innerHTML = `
+    ${gasWarning}
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <h1 style="font-size:24px;font-weight:700;color:var(--navy);margin-bottom:4px">산란계 솔루션</h1>
+        <p style="font-size:14px;color:var(--gray-600)">컨설팅 통합 관리 플랫폼</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="loadAll()"><i class="fas fa-sync-alt"></i> 새로고침</button>
+        <button class="btn btn-secondary" onclick="nav('tech')"><i class="fas fa-book-open"></i> 기술정보</button>
+        <button class="btn btn-gold" onclick="openModal('addFarm')"><i class="fas fa-plus"></i> 농장 추가</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <h2><i class="fas fa-th-large"></i> 농장 목록</h2>
+        <span class="badge badge-navy">${DB.farms.length}개 농장</span>
+      </div>
+      <div class="card-body">
+        ${topFarms.length === 0
+          ? `<div class="empty"><i class="fas fa-warehouse"></i><p>등록된 농장이 없습니다. 농장 추가 버튼을 눌러 시작하세요.</p></div>`
+          : `<div class="grid-5">${topFarms.map(f => farmCard(f)).join('')}</div>`}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2><i class="fas fa-search"></i> 농장 검색</h2></div>
+      <div class="card-body">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" class="form-control" placeholder="농장명 또는 대표자명으로 검색"
+            value="${S.searchQ}" oninput="S.searchQ=this.value;render()">
+        </div>
+        ${results === null
+          ? `<p style="font-size:13px;color:var(--gray-500);text-align:center;padding:8px">검색어를 입력하면 결과가 나타납니다.</p>`
+          : results.length === 0
+          ? `<p style="font-size:13px;color:var(--gray-500);text-align:center;padding:8px">검색 결과가 없습니다.</p>`
+          : results.map(f => `
+            <div onclick="nav('farm',{farmId:'${f.id}'})"
+              style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:var(--radius);border:1px solid var(--gray-200);cursor:pointer;transition:.2s;margin-bottom:8px"
+              onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background=''">
+              <div style="width:38px;height:38px;border-radius:8px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px">${(f.name||'?')[0]}</div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;color:var(--navy)">${f.name}</div>
+                <div style="font-size:12px;color:var(--gray-500)">${f.owner} · ${f.address}</div>
+              </div>
+              <i class="fas fa-chevron-right" style="color:var(--gray-400)"></i>
+            </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function farmCard(f) {
+  const scale = f.scale ? (Number(f.scale)/10000).toFixed(0) + '만수' : '-';
+  return `
+    <div class="farm-card" onclick="nav('farm',{farmId:'${f.id}'})">
+      <div class="farm-card-initial">${(f.name||'?')[0]}</div>
+      <div class="farm-card-name">${f.name}</div>
+      <div class="farm-card-owner">${f.owner||''}</div>
+      <div class="farm-card-meta">
+        <span class="badge badge-navy">${scale}</span>
+        ${f.antibiotic === 'true' || f.antibiotic === true ? '<span class="badge badge-green">무항생제</span>' : ''}
+      </div>
+    </div>`;
+}
+
+// ── 농장 페이지 ────────────────────────────────────────────────
+function renderFarm(c) {
+  const farm   = DB.farms.find(f => f.id === S.farmId) || {};
+  const flocks = DB.flocks.filter(f => f.farmId === S.farmId);
+  const cCount = DB.consulting.filter(c =>
+    DB.flocks.find(f => f.id === c.flockId && f.farmId === S.farmId)
+  ).length;
+
+  c.innerHTML = `
+    <div class="page-top">
+      <div>
+        <h1>${farm.name || ''}</h1>
+        <p style="font-size:13px;color:var(--gray-500);margin-top:4px">${farm.owner||''} · ${farm.address||''}</p>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="openModal('editFarm',{farm:${JSON.stringify(farm).replace(/"/g,"'")}})">
+          <i class="fas fa-edit"></i> 정보 수정
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addFlock')">
+          <i class="fas fa-plus"></i> 동번호 추가
+        </button>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-header"><h2><i class="fas fa-info-circle"></i> 농장 정보</h2></div>
+        <div class="card-body">
+          <div class="info-box">
+            <div class="info-row"><span class="info-label">농장명</span><span class="info-value">${farm.name||'-'}</span></div>
+            <div class="info-row"><span class="info-label">대표자</span><span class="info-value">${farm.owner||'-'}</span></div>
+            <div class="info-row"><span class="info-label">주소</span><span class="info-value">${farm.address||'-'}</span></div>
+            <div class="info-row"><span class="info-label">사육규모</span><span class="info-value">${farm.scale ? numFmt(farm.scale)+'수' : '-'}</span></div>
+            <div class="info-row"><span class="info-label">무항생제</span><span class="info-value">
+              ${(farm.antibiotic==='true'||farm.antibiotic===true)
+                ? '<span class="badge badge-green">인증 농장</span>'
+                : '<span class="badge badge-gray">해당 없음</span>'}
+            </span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h2><i class="fas fa-chart-bar"></i> 현황</h2></div>
+        <div class="card-body">
+          <div class="grid-3">
+            <div class="stat-mini"><div class="stat-mini-val">${flocks.length}</div><div class="stat-mini-lbl">계군 수</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">${cCount}</div><div class="stat-mini-lbl">컨설팅</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">${farm.scale ? (Number(farm.scale)/10000).toFixed(0)+'만' : '-'}</div><div class="stat-mini-lbl">수용(수)</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-layer-group"></i> 계군 목록</h2>
+        <span class="badge badge-navy">${flocks.length}동</span>
+      </div>
+      ${flocks.length === 0
+        ? `<div class="empty"><i class="fas fa-warehouse"></i><p>등록된 계군이 없습니다.</p></div>`
+        : `<div>${flocks.map(fk => {
+            const age = calcWeek(fk.inDate);
+            return `
+              <div class="flock-row" onclick="nav('flock',{farmId:'${S.farmId}',flockId:'${fk.id}',tab:'consulting'})">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div class="flock-badge">${(fk.dong||'?')[0]}</div>
+                  <div>
+                    <div style="font-weight:600;font-size:14px;color:var(--navy)">${fk.dong}</div>
+                    <div style="font-size:12px;color:var(--gray-500)">${fk.breed||''} · ${numFmt(fk.count||0)}수</div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="text-align:right">
+                    <div class="badge badge-blue" style="margin-bottom:4px">입추 ${fmt(fk.inDate)}</div>
+                    <div class="badge badge-gold">현재 ${age}주령</div>
+                  </div>
+                  <i class="fas fa-chevron-right" style="color:var(--gray-400)"></i>
+                </div>
+              </div>`;
+          }).join('')}</div>`}
+    </div>`;
+}
+
+// ── 계군(동) 페이지 ────────────────────────────────────────────
+function renderFlock(c) {
+  const fk   = DB.flocks.find(x => x.id === S.flockId) || {};
+  const farm  = DB.farms.find(x => x.id === S.farmId) || {};
+  const age   = calcWeek(fk.inDate || today());
+  const list  = DB.consulting.filter(x => x.flockId === S.flockId);
+  const perfs = DB.performance.filter(x => x.flockId === S.flockId);
+
+  c.innerHTML = `
+    <div class="page-top" style="margin-bottom:16px">
+      <h1>${farm.name||''} · ${fk.dong||''}</h1>
+      <div class="badge badge-blue" style="font-size:13px;padding:6px 12px">${fk.breed||''} ${age}주령</div>
+    </div>
+
+    <div class="info-box" style="margin-bottom:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;background:#fff;border:1px solid var(--gray-200)">
+      <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:3px">동번호</div><div style="font-weight:600">${fk.dong||'-'}</div></div>
+      <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:3px">사육수수</div><div style="font-weight:600">${numFmt(fk.count||0)}수</div></div>
+      <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:3px">품종</div><div style="font-weight:600">${fk.breed||'-'}</div></div>
+      <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:3px">입추일</div><div style="font-weight:600">${fmt(fk.inDate)}</div></div>
+      <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:3px">중추이동일</div><div style="font-weight:600">${fmt(fk.moveDate)}</div></div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab ${S.tab==='consulting'?'active':''}" onclick="S.tab='consulting';render()">
+        <i class="fas fa-clipboard-list"></i> 컨설팅 내역
+        <span class="badge badge-navy" style="margin-left:4px">${list.length}</span>
+      </div>
+      <div class="tab ${S.tab==='performance'?'active':''}" onclick="S.tab='performance';render()">
+        <i class="fas fa-chart-line"></i> 성적관리
+        <span class="badge badge-navy" style="margin-left:4px">${perfs.length}</span>
+      </div>
+    </div>
+
+    ${S.tab === 'consulting' ? renderConsultingTab(fk, list) : renderPerfTab(fk, perfs)}`;
+}
+
+function renderConsultingTab(fk, list) {
+  const sorted = [...list].sort((a,b) => String(b.date).localeCompare(String(a.date)));
+  return `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <button class="btn btn-primary" onclick="openModal('addConsulting',{flockId:'${fk.id}'})">
+        <i class="fas fa-plus"></i> 컨설팅 등록
+      </button>
+    </div>
+    ${sorted.length === 0
+      ? `<div class="empty"><i class="fas fa-clipboard"></i><p>등록된 컨설팅 내역이 없습니다.</p></div>`
+      : sorted.map(item => `
+        <div class="consulting-item">
+          <div class="consulting-date"><i class="fas fa-calendar"></i> ${fmt(item.date)} · ${item.breed||''} · ${item.week||''}주령</div>
+          <div class="consulting-content" style="font-size:14px;line-height:1.7;white-space:pre-wrap">${item.content||''}</div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:var(--gray-50);border-radius:var(--radius);padding:10px 12px">
+              <div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;font-weight:600">진단결과</div>
+              <div style="font-size:13px">${item.diagnosis||'-'}</div>
+            </div>
+            <div style="background:#fff8e6;border-radius:var(--radius);padding:10px 12px">
+              <div style="font-size:11px;color:#8a6f2e;margin-bottom:4px;font-weight:600">조치사항</div>
+              <div style="font-size:13px">${item.action||'-'}</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:10px">
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('consulting','${item.id}')">
+              <i class="fas fa-trash"></i> 삭제
+            </button>
+          </div>
+        </div>`).join('')}`;
+}
+
+function renderPerfTab(fk, list) {
+  const dayAge  = daysSince(fk.inDate || today());
+  const weekAge = Math.floor(dayAge / 7);
+  const sorted  = [...list].sort((a,b) => String(b.date).localeCompare(String(a.date)));
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="notice" style="flex:1;margin-bottom:0;margin-right:12px">
+        <i class="fas fa-info-circle"></i>
+        오늘(${fmt(today())}) 기준 · 일령: ${dayAge}일 · 주령: ${weekAge}주
+      </div>
+      <button class="btn btn-primary btn-sm"
+        onclick="openModal('addPerf',{flockId:'${fk.id}',breed:'${fk.breed||''}',weekAge:${weekAge},dayAge:${dayAge}})">
+        <i class="fas fa-plus"></i> 성적 입력
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0;overflow-x:auto">
+        <table class="table">
+          <thead>
+            <tr><th>날짜</th><th>일령</th><th>주령</th><th>체중(g)</th><th>산란율(%)</th><th>오파란율(%)</th><th>난중(g)</th><th>폐사(수)</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${sorted.length === 0
+              ? `<tr><td colspan="9" style="text-align:center;padding:24px;color:var(--gray-400)">입력된 성적 데이터가 없습니다.</td></tr>`
+              : sorted.map(p => `
+                <tr>
+                  <td>${fmt(p.date)}</td><td>${p.dayAge||'-'}</td><td>${p.weekAge||'-'}</td>
+                  <td>${p.weight||'-'}</td>
+                  <td style="color:${Number(p.layRate)>=90?'#137333':'var(--gray-700)'}"><b>${p.layRate||'-'}</b></td>
+                  <td>${p.dirtyRate||'-'}</td><td>${p.eggWeight||'-'}</td>
+                  <td style="color:${Number(p.mortality)>5?'#c5221f':'var(--gray-700)'}">${p.mortality||0}</td>
+                  <td><button class="btn btn-danger btn-sm" onclick="deleteItem('performance','${p.id}')"><i class="fas fa-trash"></i></button></td>
+                </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ── 기술정보 페이지 ────────────────────────────────────────────
+function renderTech(c) {
+  const TAG_COLOR = { '질병':'badge-red','영양':'badge-green','관리':'badge-blue','품종':'badge-gold' };
+  const q = S.techSearch.toLowerCase();
+  const posts = DB.tech.filter(p =>
+    !q || (p.title||'').toLowerCase().includes(q) ||
+    (p.tag||'').toLowerCase().includes(q) ||
+    (p.keywords||'').toLowerCase().includes(q)
+  );
+
+  if (S.showTechPost) {
+    const post = DB.tech.find(p => p.id === S.showTechPost) || {};
+    const kws = String(post.keywords||'').split(',').filter(Boolean);
+    return c.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <button class="btn btn-ghost btn-sm" onclick="S.showTechPost=null;render()"><i class="fas fa-arrow-left"></i> 목록으로</button>
+        <h1 style="font-size:20px;font-weight:700;color:var(--navy);flex:1">${post.title||''}</h1>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <span class="badge ${TAG_COLOR[post.tag]||'badge-gray'} post-tag">${post.tag||''}</span>
+            <span style="font-size:13px;color:var(--gray-500)">${fmt(post.date)}</span>
+          </div>
+          <p style="font-size:15px;line-height:1.8;white-space:pre-wrap;margin-bottom:20px">${post.content||''}</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${kws.map(k=>`<span class="kw-tag">#${k.trim()}</span>`).join('')}
+          </div>
+          <div style="margin-top:16px;display:flex;justify-content:flex-end">
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('tech','${post.id}')"><i class="fas fa-trash"></i> 삭제</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  c.innerHTML = `
+    <div class="page-top">
+      <h1><i class="fas fa-book-open" style="color:var(--gold);margin-right:8px"></i>기술정보</h1>
+      <button class="btn btn-primary" onclick="openModal('addTech')"><i class="fas fa-plus"></i> 게시물 작성</button>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-body" style="padding:14px 20px">
+        <div class="search-box" style="margin-bottom:0">
+          <i class="fas fa-search"></i>
+          <input type="text" class="form-control" placeholder="제목, 말머리, 키워드로 검색"
+            value="${S.techSearch}" oninput="S.techSearch=this.value;render()" style="border-radius:22px">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      ${posts.length === 0
+        ? `<div class="empty"><i class="fas fa-file-search"></i><p>검색 결과가 없습니다.</p></div>`
+        : posts.map(p => {
+            const kws = String(p.keywords||'').split(',').filter(Boolean);
+            return `
+              <div class="post-item" onclick="S.showTechPost='${p.id}';render()">
+                <span class="post-tag badge ${TAG_COLOR[p.tag]||'badge-gray'}">${p.tag||''}</span>
+                <div style="flex:1">
+                  <div class="post-title">${p.title||''}</div>
+                  <div class="post-meta">${fmt(p.date)} · ${kws.map(k=>`<span class="kw-tag">#${k.trim()}</span>`).join('')}</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--gray-400);margin-top:4px"></i>
+              </div>`;
+          }).join('')}
+    </div>`;
+}
+
+// ── 모달 관리 ──────────────────────────────────────────────────
+function openModal(name, data = {}) {
+  S.modal = name;
+  S.modalData = data;
+  renderModal();
+}
+
+function closeModal() {
+  S.modal = null;
+  S.modalData = {};
+  document.getElementById('modal-container').innerHTML = '';
+}
+
+function renderModal() {
+  const mc = document.getElementById('modal-container');
+  const m  = S.modal;
+  if (!m) { mc.innerHTML = ''; return; }
+
+  const wrap  = (title, icon, body, footer, wide=false) => `
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal" style="${wide?'max-width:640px':''}">
+        <div class="modal-header">
+          <h3><i class="fas fa-${icon}"></i> ${title}</h3>
+          <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">${body}</div>
+        <div class="modal-footer">${footer}</div>
+      </div>
+    </div>`;
+
+  // 농장 추가
+  if (m === 'addFarm') {
+    mc.innerHTML = wrap('농장 추가', 'plus',
+      `<div class="form-group"><label class="form-label">농장명 *</label><input class="form-control" id="m-name" placeholder="예: F농장"></div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">대표자명</label><input class="form-control" id="m-owner" placeholder="홍길동"></div>
+         <div class="form-group"><label class="form-label">사육규모 (수)</label><input type="number" class="form-control" id="m-scale" placeholder="50000"></div>
+       </div>
+       <div class="form-group"><label class="form-label">농장 주소</label><input class="form-control" id="m-addr" placeholder="도로명 주소 입력"></div>
+       <div class="form-group"><label class="form-label">무항생제 여부</label>
+         <select class="form-control" id="m-ab"><option value="false">일반</option><option value="true">무항생제 인증</option></select>
+       </div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-primary" onclick="saveFarm()"><i class="fas fa-save"></i> 저장</button>`
+    );
+  }
+
+  // 농장 수정
+  else if (m === 'editFarm') {
+    const f = S.modalData.farm || DB.farms.find(x => x.id === S.farmId) || {};
+    mc.innerHTML = wrap('농장 정보 수정', 'edit',
+      `<div class="form-group"><label class="form-label">농장명</label><input class="form-control" id="e-name" value="${f.name||''}"></div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">대표자명</label><input class="form-control" id="e-owner" value="${f.owner||''}"></div>
+         <div class="form-group"><label class="form-label">사육규모 (수)</label><input type="number" class="form-control" id="e-scale" value="${f.scale||''}"></div>
+       </div>
+       <div class="form-group"><label class="form-label">농장 주소</label><input class="form-control" id="e-addr" value="${f.address||''}"></div>
+       <div class="form-group"><label class="form-label">무항생제 여부</label>
+         <select class="form-control" id="e-ab">
+           <option value="false" ${!(f.antibiotic==='true'||f.antibiotic===true)?'selected':''}>일반</option>
+           <option value="true"  ${(f.antibiotic==='true'||f.antibiotic===true)?'selected':''}>무항생제 인증</option>
+         </select>
+       </div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-primary" onclick="updateFarm('${f.id}')"><i class="fas fa-save"></i> 저장</button>`
+    );
+  }
+
+  // 계군 추가
+  else if (m === 'addFlock') {
+    mc.innerHTML = wrap('계군 정보 추가', 'plus',
+      `<div class="form-row">
+         <div class="form-group"><label class="form-label">동번호 *</label><input class="form-control" id="fk-dong" placeholder="예: 6동"></div>
+         <div class="form-group"><label class="form-label">사육수수 (수)</label><input type="number" class="form-control" id="fk-count" placeholder="10000"></div>
+       </div>
+       <div class="form-group"><label class="form-label">품종</label>
+         <select class="form-control" id="fk-breed">
+           <option>Hy-Line Brown</option><option>ISA Brown</option><option>Nick Chick</option><option>Lohmann Brown</option><option>기타</option>
+         </select>
+       </div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${today()}"></div>
+         <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move"></div>
+       </div>
+       <div class="form-group"><label class="form-label">백신 프로그램 메모</label>
+         <textarea class="form-control" id="fk-vaccine" rows="2" placeholder="백신 프로그램 내용 입력"></textarea>
+       </div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-primary" onclick="saveFlock()"><i class="fas fa-save"></i> 저장</button>`
+    );
+  }
+
+  // 컨설팅 등록
+  else if (m === 'addConsulting') {
+    const fk  = DB.flocks.find(x => x.id === S.modalData.flockId) || {};
+    const wk  = calcWeek(fk.inDate || today());
+    mc.innerHTML = wrap('컨설팅 등록', 'clipboard-plus',
+      `<div class="form-row">
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="c-date" value="${today()}"></div>
+         <div class="form-group"><label class="form-label">동번호</label><input class="form-control" value="${fk.dong||''}" readonly style="background:var(--gray-50)"></div>
+       </div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">품종</label><input class="form-control" value="${fk.breed||''}" readonly style="background:var(--gray-50)"></div>
+         <div class="form-group"><label class="form-label">주령</label><input class="form-control" value="${wk}주령" readonly style="background:var(--gray-50)"></div>
+       </div>
+       <div class="form-group">
+         <label class="form-label">내용</label>
+         <div style="border:1.5px solid var(--gray-300);border-radius:var(--radius);overflow:hidden">
+           <div style="background:var(--gray-50);padding:6px 10px;border-bottom:1px solid var(--gray-200);display:flex;gap:6px">
+             <button type="button" onclick="insertText('c-content','\n• ')" style="background:none;border:none;cursor:pointer;padding:3px 8px;border-radius:4px;font-size:13px;color:var(--gray-700)">• 목록</button>
+             <button type="button" onclick="insertText('c-content','\n1. ')" style="background:none;border:none;cursor:pointer;padding:3px 8px;border-radius:4px;font-size:13px;color:var(--gray-700)">1. 번호</button>
+             <button type="button" onclick="insertText('c-content','【 】')" style="background:none;border:none;cursor:pointer;padding:3px 8px;border-radius:4px;font-size:13px;color:var(--gray-700)">【 】기호</button>
+           </div>
+           <textarea id="c-content" style="width:100%;min-height:100px;border:none;padding:10px 12px;font-size:14px;resize:vertical;font-family:'Pretendard',sans-serif" placeholder="컨설팅 내용을 입력하세요."></textarea>
+         </div>
+       </div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">진단결과</label><input class="form-control" id="c-diag" placeholder="진단 결과"></div>
+         <div class="form-group"><label class="form-label">조치사항</label><input class="form-control" id="c-action" placeholder="조치사항"></div>
+       </div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-primary" onclick="saveConsulting('${fk.id}','${fk.breed||''}',${wk})"><i class="fas fa-save"></i> 저장</button>`,
+      true
+    );
+  }
+
+  // 성적 입력
+  else if (m === 'addPerf') {
+    const d = S.modalData;
+    mc.innerHTML = wrap('성적 입력', 'chart-line',
+      `<div class="info-box" style="margin-bottom:16px">
+         <div class="info-row"><span class="info-label">품종</span><span class="info-value">${d.breed||''}</span></div>
+         <div class="info-row"><span class="info-label">현재</span><span class="info-value">${d.dayAge}일령 · ${d.weekAge}주령</span></div>
+       </div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="p-date" value="${today()}"></div>
+         <div class="form-group"><label class="form-label">체중 (g)</label><input type="number" class="form-control" id="p-weight" placeholder="1800"></div>
+       </div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">산란율 (%)</label><input type="number" step="0.1" class="form-control" id="p-lay" placeholder="92.5"></div>
+         <div class="form-group"><label class="form-label">오파란율 (%)</label><input type="number" step="0.1" class="form-control" id="p-dirty" placeholder="1.2"></div>
+       </div>
+       <div class="form-row">
+         <div class="form-group"><label class="form-label">난중 (g)</label><input type="number" step="0.1" class="form-control" id="p-ew" placeholder="62.5"></div>
+         <div class="form-group"><label class="form-label">폐사 (수)</label><input type="number" class="form-control" id="p-mort" placeholder="0"></div>
+       </div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-primary" onclick="savePerf()"><i class="fas fa-save"></i> 저장</button>`
+    );
+  }
+
+  // 기술정보 작성
+  else if (m === 'addTech') {
+    mc.innerHTML = wrap('기술정보 게시물 작성', 'file-alt',
+      `<div class="form-row">
+         <div class="form-group"><label class="form-label">말머리</label>
+           <select class="form-control" id="t-tag"><option>질병</option><option>영양</option><option>관리</option><option>품종</option><option>기타</option></select>
+         </div>
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="t-date" value="${today()}"></div>
+       </div>
+       <div class="form-group"><label class="form-label">제목 *</label><input class="form-control" id="t-title" placeholder="게시물 제목"></div>
+       <div class="form-group"><label class="form-label">내용</label><textarea class="form-control" id="t-content" style="min-height:120px;resize:vertical" placeholder="내용을 입력하세요."></textarea></div>
+       <div class="form-group"><label class="form-label">키워드 (쉼표로 구분)</label><input class="form-control" id="t-kw" placeholder="예: IB, 백신, 호흡기"></div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-primary" onclick="saveTech()"><i class="fas fa-save"></i> 저장</button>`,
+      true
+    );
+  }
+
+  // 시트 초기화
+  else if (m === 'initSheets') {
+    mc.innerHTML = wrap('구글시트 초기화', 'database',
+      `<div class="notice"><i class="fas fa-info-circle"></i>
+         GAS 웹앱 배포 후 최초 1회 실행하세요. 구글시트에 필요한 탭과 헤더가 자동으로 생성됩니다.
+       </div>
+       <p style="font-size:14px;color:var(--gray-700)">
+         현재 GAS URL: <code style="font-size:12px;background:var(--gray-100);padding:2px 6px;border-radius:4px">${CONFIG.GAS_URL.slice(0,60)}...</code>
+       </p>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-gold" onclick="runInitSheets()"><i class="fas fa-play"></i> 초기화 실행</button>`
+    );
+  }
+}
+
+function openInitModal() { openModal('initSheets'); }
+
+async function runInitSheets() {
+  closeModal();
+  showLoading('구글시트 초기화 중...');
+  try {
+    await API.init();
+    toast('시트 초기화 완료. 데이터를 불러옵니다.', 'success');
+    await loadAll();
+  } catch(e) {
+    toast('초기화 실패: ' + e.message, 'error');
+    hideLoading();
+  }
+}
+
+// ── CRUD 핸들러 ────────────────────────────────────────────────
+function insertText(id, text) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const s = el.selectionStart;
+  el.value = el.value.slice(0, s) + text + el.value.slice(s);
+  el.selectionStart = el.selectionEnd = s + text.length;
+  el.focus();
+}
+
+async function saveFarm() {
+  const name = (document.getElementById('m-name').value || '').trim();
+  if (!name) { toast('농장명을 입력하세요.', 'error'); return; }
+  const row = {
+    id: uid(), name,
+    owner:     document.getElementById('m-owner').value.trim(),
+    address:   document.getElementById('m-addr').value.trim(),
+    scale:     document.getElementById('m-scale').value,
+    antibiotic:document.getElementById('m-ab').value,
+  };
+  closeModal();
+  await syncSave('farms', row, API.saveFarm, '농장이 추가되었습니다.');
+}
+
+async function updateFarm(id) {
+  const row = {
+    id,
+    name:      document.getElementById('e-name').value.trim(),
+    owner:     document.getElementById('e-owner').value.trim(),
+    address:   document.getElementById('e-addr').value.trim(),
+    scale:     document.getElementById('e-scale').value,
+    antibiotic:document.getElementById('e-ab').value,
+  };
+  closeModal();
+  await syncSave('farms', row, API.saveFarm, '농장 정보가 수정되었습니다.', true);
+}
+
+async function saveFlock() {
+  const dong = (document.getElementById('fk-dong').value || '').trim();
+  if (!dong) { toast('동번호를 입력하세요.', 'error'); return; }
+  const row = {
+    id: uid(), farmId: S.farmId, dong,
+    count:       document.getElementById('fk-count').value,
+    breed:       document.getElementById('fk-breed').value,
+    inDate:      document.getElementById('fk-in').value,
+    moveDate:    document.getElementById('fk-move').value,
+    vaccineNote: document.getElementById('fk-vaccine').value,
+  };
+  closeModal();
+  await syncSave('flocks', row, API.saveFlock, '계군이 추가되었습니다.');
+}
+
+async function saveConsulting(flockId, breed, week) {
+  const row = {
+    id: uid(), flockId, breed, week,
+    date:      document.getElementById('c-date').value,
+    content:   document.getElementById('c-content').value,
+    diagnosis: document.getElementById('c-diag').value,
+    action:    document.getElementById('c-action').value,
+  };
+  closeModal();
+  await syncSave('consulting', row, API.saveConsulting, '컨설팅이 등록되었습니다.');
+}
+
+async function savePerf() {
+  const fk = DB.flocks.find(x => x.id === S.modalData.flockId) || {};
+  const da = daysSince(fk.inDate || today());
+  const row = {
+    id: uid(), flockId: S.modalData.flockId,
+    date:      document.getElementById('p-date').value,
+    dayAge:    da, weekAge: Math.floor(da / 7),
+    weight:    document.getElementById('p-weight').value,
+    layRate:   document.getElementById('p-lay').value,
+    dirtyRate: document.getElementById('p-dirty').value,
+    eggWeight: document.getElementById('p-ew').value,
+    mortality: document.getElementById('p-mort').value,
+  };
+  closeModal();
+  await syncSave('performance', row, API.savePerformance, '성적이 저장되었습니다.');
+}
+
+async function saveTech() {
+  const title = (document.getElementById('t-title').value || '').trim();
+  if (!title) { toast('제목을 입력하세요.', 'error'); return; }
+  const row = {
+    id: uid(),
+    tag:      document.getElementById('t-tag').value,
+    title,
+    content:  document.getElementById('t-content').value,
+    keywords: document.getElementById('t-kw').value,
+    date:     document.getElementById('t-date').value,
+  };
+  closeModal();
+  await syncSave('tech', row, API.saveTech, '게시물이 등록되었습니다.');
+}
+
+async function deleteItem(type, id) {
+  if (!confirm('삭제하시겠습니까?')) return;
+  const apiMap = {
+    consulting:  API.deleteConsulting,
+    performance: API.deletePerformance,
+    tech:        API.deleteTech,
+    farms:       API.deleteFarm,
+    flocks:      API.deleteFlock,
+  };
+  // 로컬 캐시에서 즉시 제거
+  DB[type === 'consulting' ? 'consulting' : type === 'performance' ? 'performance' : type] =
+    (DB[type === 'consulting' ? 'consulting' : type === 'performance' ? 'performance' : type] || []).filter(x => x.id !== id);
+  if (S.showTechPost === id) S.showTechPost = null;
+  render();
+  if (isConfigured) {
+    showLoading('삭제 중...');
+    try {
+      await apiMap[type](id);
+      toast('삭제되었습니다.', 'success');
+    } catch(e) {
+      toast('삭제 실패: ' + e.message, 'error');
+    } finally { hideLoading(); }
+  }
+}
+
+// 공통 저장: 로컬 캐시 즉시 반영 후 GAS 비동기 저장
+async function syncSave(collection, row, apiFn, successMsg, isUpdate=false) {
+  // 로컬 캐시 즉시 업데이트 (UI 반응성)
+  if (isUpdate) {
+    const idx = DB[collection].findIndex(x => x.id === row.id);
+    if (idx >= 0) DB[collection][idx] = row;
+  } else {
+    DB[collection].push(row);
+  }
+  render();
+
+  if (!isConfigured) {
+    toast('⚠ GAS URL 미설정 — 로컬 임시 저장', 'info');
+    return;
+  }
+  showLoading('구글시트에 저장 중...');
+  try {
+    await apiFn(row);
+    toast(successMsg, 'success');
+  } catch(e) {
+    toast('저장 실패: ' + e.message, 'error');
+  } finally { hideLoading(); }
+}
+
+// ── 앱 시작 ────────────────────────────────────────────────────
+render();
+if (isConfigured) loadAll();
+</script>
+</body>
+</html>
