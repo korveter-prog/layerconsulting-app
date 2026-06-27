@@ -13,13 +13,12 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --navy:#0D2547;--navy-light:#1a3a6b;
-  --gold:#C9A84C;
+  --navy:#0D2547;--navy-light:#1a3a6b;--gold:#C9A84C;
   --gray-50:#f8f9fa;--gray-100:#f1f3f4;--gray-200:#e8eaed;
   --gray-300:#dadce0;--gray-400:#bdc1c6;--gray-500:#9aa0a6;
   --gray-600:#5f6368;--gray-700:#3c4043;
   --text:#1a1a2e;--radius:10px;
-  --shadow:0 2px 8px rgba(0,0,0,0.10);--shadow-lg:0 8px 32px rgba(0,0,0,0.18);
+  --shadow:0 2px 8px rgba(0,0,0,.10);--shadow-lg:0 8px 32px rgba(0,0,0,.18);
   --header-h:56px;--safe-bottom:env(safe-area-inset-bottom,0px);
 }
 html{font-size:16px}
@@ -39,44 +38,43 @@ input,select,textarea{font-family:'Pretendard',sans-serif;font-size:16px;-webkit
 .breadcrumb .current{color:#fff;font-weight:600;overflow:hidden;text-overflow:ellipsis}
 
 /* ── 레이아웃 ── */
-.page{max-width:1200px;margin:0 auto;width:100%;padding:16px 14px 80px}
+.page{max-width:1200px;margin:0 auto;width:100%;padding:14px 12px 88px}
 
 /* ── 버튼 ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:var(--radius);font-size:14px;font-weight:600;border:none;transition:.15s;cursor:pointer;min-height:44px;white-space:nowrap}
-.btn-primary{background:var(--navy);color:#fff}
-.btn-primary:active{background:var(--navy-light)}
-.btn-secondary{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
-.btn-secondary:active{background:var(--gray-50)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;border:none;transition:.15s;cursor:pointer;min-height:40px;white-space:nowrap}
+.btn-primary{background:var(--navy);color:#fff}.btn-primary:active{background:var(--navy-light)}
+.btn-secondary{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}.btn-secondary:active{background:var(--gray-50)}
 .btn-gold{background:var(--gold);color:#fff}
-.btn-ghost{background:transparent;color:var(--navy);border:1px solid var(--gray-300)}
-.btn-ghost:active{background:var(--gray-50)}
-.btn-danger{background:#dc3545;color:#fff}
-.btn-danger:active{background:#c82333}
-.btn-sm{padding:7px 12px;font-size:13px;min-height:36px}
-.btn-icon{padding:0;width:44px;height:44px;border-radius:50%}
+.btn-ghost{background:transparent;color:var(--navy);border:1px solid var(--gray-300)}.btn-ghost:active{background:var(--gray-50)}
+.btn-danger{background:#dc3545;color:#fff}.btn-danger:active{background:#c82333}
+.btn-sm{padding:6px 11px;font-size:12px;min-height:34px}
+.btn-icon-only{padding:0;width:36px;height:36px;min-height:36px;border-radius:8px}
 
-/* ── FAB (하단 고정 버튼) ── */
-.fab{position:fixed;bottom:calc(20px + var(--safe-bottom));right:18px;z-index:150;width:54px;height:54px;border-radius:50%;background:var(--navy);color:#fff;border:none;font-size:22px;box-shadow:0 4px 16px rgba(13,37,71,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s}
-.fab:active{transform:scale(.93)}
-.fab-gold{background:var(--gold);box-shadow:0 4px 16px rgba(201,168,76,.4)}
+/* ── FAB 영역 (뒤로가기 + 주요 액션) ── */
+.fab-area{position:fixed;bottom:calc(18px + var(--safe-bottom));right:14px;z-index:150;display:flex;flex-direction:row;align-items:center;gap:8px}
+.fab{width:50px;height:50px;border-radius:50%;border:none;font-size:20px;box-shadow:0 4px 16px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s}
+.fab:active{transform:scale(.92)}
+.fab-main{background:var(--navy);color:#fff;box-shadow:0 4px 16px rgba(13,37,71,.4)}
+.fab-gold{background:var(--gold);color:#fff;box-shadow:0 4px 16px rgba(201,168,76,.4)}
+.fab-back{background:#fff;color:var(--navy);border:1.5px solid var(--gray-300);box-shadow:var(--shadow)}
 
 /* ── 카드 ── */
-.card{background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
-.card-header{padding:14px 16px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between}
-.card-header h2{font-size:15px;font-weight:600;display:flex;align-items:center;gap:7px;color:var(--navy)}
-.card-body{padding:16px}
+.card{background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
+.card-header{padding:12px 14px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between}
+.card-header h2{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;color:var(--navy)}
+.card-body{padding:14px}
 
 /* ── 폼 ── */
-.form-group{margin-bottom:14px}
-.form-label{display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px}
-.form-control{width:100%;padding:11px 13px;border:1.5px solid var(--gray-300);border-radius:var(--radius);font-size:16px;color:var(--text);background:#fff;transition:.15s}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:5px}
+.form-control{width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:var(--radius);font-size:16px;color:var(--text);background:#fff;transition:.15s}
 .form-control:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(13,37,71,.08)}
 .form-control::placeholder{color:var(--gray-400)}
 select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa0a6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 /* ── 배지 ── */
-.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:20px;font-size:10px;font-weight:600}
 .badge-navy{background:rgba(13,37,71,.1);color:var(--navy)}
 .badge-gold{background:rgba(201,168,76,.18);color:#7a5c1e}
 .badge-green{background:#e6f4ea;color:#137333}
@@ -88,154 +86,170 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 
 /* ── 테이블 ── */
 .table{width:100%;border-collapse:collapse}
-.table th{background:var(--navy);color:#fff;padding:9px 10px;font-size:11px;font-weight:600;text-align:center;white-space:nowrap}
-.table td{padding:9px 8px;border-bottom:1px solid var(--gray-100);font-size:13px;text-align:center}
+.table th{background:var(--navy);color:#fff;padding:8px 8px;font-size:11px;font-weight:600;text-align:center;white-space:nowrap}
+.table td{padding:8px 7px;border-bottom:1px solid var(--gray-100);font-size:12px;text-align:center}
 .table tr:last-child td{border-bottom:none}
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:0 0 14px 14px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
 /* ── 탭 ── */
-.tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:16px;background:#fff;border-radius:14px 14px 0 0;overflow:hidden}
-.tab{flex:1;padding:13px 8px;font-size:14px;font-weight:500;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s;display:flex;align-items:center;justify-content:center;gap:5px;min-height:48px}
+.tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:14px;background:#fff;border-radius:14px 14px 0 0;overflow:hidden}
+.tab{flex:1;padding:12px 6px;font-size:13px;font-weight:500;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s;display:flex;align-items:center;justify-content:center;gap:4px;min-height:46px}
 .tab.active{color:var(--navy);border-bottom-color:var(--navy);font-weight:700;background:rgba(13,37,71,.03)}
 
-/* ── 정보 박스 ── */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:#fff;border-radius:var(--radius);border:1px solid var(--gray-200);padding:14px;margin-bottom:14px}
-.info-cell{display:flex;flex-direction:column;gap:3px}
-.info-cell-label{font-size:11px;color:var(--gray-500);font-weight:500}
-.info-cell-value{font-size:14px;font-weight:600;color:var(--text)}
-.info-row-full{grid-column:1/-1}
-
 /* ── 농장 카드 ── */
-.farm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.farm-card{background:#fff;border-radius:12px;padding:14px;cursor:pointer;transition:.15s;border:2px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,.07);active-color:var(--navy)}
+.farm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.farm-card{background:#fff;border-radius:12px;padding:12px;cursor:pointer;transition:.15s;border:2px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,.07)}
 .farm-card:active{border-color:var(--navy);background:var(--gray-50)}
-.farm-card-name{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:2px}
-.farm-card-owner{font-size:12px;color:var(--gray-600);margin-bottom:8px}
-.farm-card-meta{display:flex;flex-wrap:wrap;gap:4px}
+/* 수정6: 농장카드 첫줄 이름+농장주, 둘째줄 시군+수수 */
+.fc-top{display:flex;align-items:baseline;gap:5px;margin-bottom:4px}
+.fc-name{font-size:14px;font-weight:700;color:var(--navy)}
+.fc-owner{font-size:11px;color:var(--gray-500)}
+.fc-bottom{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.fc-addr{font-size:11px;color:var(--gray-600)}
+.fc-scale{font-size:11px;color:var(--navy);font-weight:600}
 
 /* ── 검색 ── */
-.search-wrap{display:flex;gap:8px;margin-bottom:12px}
+.search-wrap{display:flex;gap:7px;margin-bottom:10px}
 .search-input-wrap{position:relative;flex:1}
-.search-input-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:15px;pointer-events:none}
-.search-input{width:100%;height:46px;padding-left:38px;padding-right:14px;border-radius:23px;border:1.5px solid var(--gray-300);font-size:16px;background:#fff}
+.search-input-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:14px;pointer-events:none}
+.search-input{width:100%;height:44px;padding-left:36px;padding-right:12px;border-radius:22px;border:1.5px solid var(--gray-300);font-size:16px;background:#fff}
 .search-input:focus{outline:none;border-color:var(--navy)}
-.search-submit{height:46px;padding:0 18px;border-radius:23px;background:var(--navy);color:#fff;border:none;font-size:14px;font-weight:600;white-space:nowrap;min-width:64px}
+.search-submit{height:44px;padding:0 16px;border-radius:22px;background:var(--navy);color:#fff;border:none;font-size:13px;font-weight:600;white-space:nowrap}
 
-/* ── 계군 행 ── */
-.flock-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:.15s;min-height:68px}
-.flock-row:active{background:var(--gray-50)}
-.flock-row:last-child{border-bottom:none}
-.flock-dot{width:40px;height:40px;border-radius:10px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
-.flock-info{flex:1;min-width:0}
-.flock-name{font-size:15px;font-weight:600;color:var(--navy)}
-.flock-sub{font-size:12px;color:var(--gray-500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.flock-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+/* ── 계군 카드 (수정4: KPI 박스형) ── */
+.flock-card{background:#fff;border-radius:12px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;cursor:pointer;transition:.15s}
+.flock-card:active{background:var(--gray-50)}
+.flock-card-head{background:var(--navy);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.flock-card-title{font-size:15px;font-weight:700}
+.flock-card-breed{font-size:11px;opacity:.8}
+/* KPI 박스 그리드: 모바일 2열, 웹 5열 */
+.flock-kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+.flock-kpi-item{padding:10px 12px;border-right:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);text-align:center}
+.flock-kpi-item:nth-child(2n){border-right:none}
+.flock-kpi-val{font-size:16px;font-weight:700;color:var(--navy)}
+.flock-kpi-lbl{font-size:10px;color:var(--gray-500);margin-top:2px}
+.flock-card-foot{padding:8px 14px;display:flex;gap:6px;border-top:1px solid var(--gray-100)}
 
 /* ── 컨설팅 카드 ── */
 .c-card{background:#fff;border-radius:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.07);border-left:4px solid var(--navy);overflow:hidden}
-.c-card-head{padding:12px 14px 0;display:flex;align-items:center;justify-content:space-between}
+.c-card-head{padding:10px 12px 0;display:flex;align-items:center;justify-content:space-between}
 .c-card-date{font-size:12px;color:var(--gray-500);display:flex;align-items:center;gap:4px}
-.c-card-body{padding:10px 14px}
+.c-card-acts{display:flex;gap:5px}
+.c-card-body{padding:8px 12px}
 .c-card-content{font-size:14px;line-height:1.7;white-space:pre-wrap;color:var(--text)}
-.c-card-foot{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px 12px}
-.c-box{border-radius:8px;padding:9px 11px}
-.c-box-label{font-size:10px;font-weight:600;margin-bottom:3px}
+.c-card-foot{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:8px 12px 10px}
+.c-box{border-radius:8px;padding:8px 10px}
+.c-box-label{font-size:10px;font-weight:600;margin-bottom:2px}
 .c-box-val{font-size:13px}
 
 /* ── 통계 미니 ── */
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.stat-mini{background:var(--gray-50);border-radius:10px;padding:11px 8px;text-align:center}
-.stat-val{font-size:20px;font-weight:700;color:var(--navy)}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.stat-mini{background:var(--gray-50);border-radius:10px;padding:10px 6px;text-align:center}
+.stat-val{font-size:18px;font-weight:700;color:var(--navy)}
 .stat-lbl{font-size:10px;color:var(--gray-500);margin-top:2px}
 
 /* ── 농장 정보 리스트 ── */
-.info-list{display:flex;flex-direction:column;gap:0}
-.info-item{display:flex;padding:10px 0;border-bottom:1px solid var(--gray-100)}
+.info-list{display:flex;flex-direction:column}
+.info-item{display:flex;padding:8px 0;border-bottom:1px solid var(--gray-100)}
 .info-item:last-child{border-bottom:none}
-.info-key{font-size:13px;color:var(--gray-600);min-width:76px;flex-shrink:0}
+.info-key{font-size:13px;color:var(--gray-600);min-width:72px;flex-shrink:0}
 .info-val{font-size:13px;font-weight:500;color:var(--text);flex:1}
 
+/* ── 계군 상단 KPI ── */
+.flock-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.flock-info-cell{background:#fff;border-radius:var(--radius);border:1px solid var(--gray-200);padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.flock-info-label{font-size:10px;color:var(--gray-500);font-weight:500}
+.flock-info-value{font-size:14px;font-weight:700;color:var(--navy)}
+
 /* ── 게시물 ── */
-.post-item{padding:14px 16px;border-bottom:1px solid var(--gray-100);cursor:pointer;display:flex;align-items:flex-start;gap:10px;min-height:64px}
+.post-item{padding:12px 14px;border-bottom:1px solid var(--gray-100);cursor:pointer;display:flex;align-items:flex-start;gap:9px;min-height:60px}
 .post-item:active{background:var(--gray-50)}
 .post-item:last-child{border-bottom:none}
-.post-tag{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:1px}
-.post-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.4}
+.post-tag{padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.post-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;line-height:1.4}
 .post-meta{font-size:11px;color:var(--gray-500);display:flex;flex-wrap:wrap;gap:3px;align-items:center}
-.kw-tag{background:var(--gray-100);color:var(--gray-600);padding:1px 6px;border-radius:4px;font-size:11px}
+.kw-tag{background:var(--gray-100);color:var(--gray-600);padding:1px 5px;border-radius:4px;font-size:10px}
 
 /* ── 모달 (하단 슬라이드업) ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;flex-direction:column;justify-content:flex-end}
-.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(16px + var(--safe-bottom));animation:slideUp .28s cubic-bezier(.32,.72,0,1)}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(14px + var(--safe-bottom));animation:slideUp .28s cubic-bezier(.32,.72,0,1)}
 .modal-handle{width:36px;height:4px;border-radius:2px;background:var(--gray-300);margin:12px auto 0}
-.modal-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;border-bottom:1px solid var(--gray-100)}
-.modal-header h3{font-size:16px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px}
-.modal-body{padding:16px 20px}
-.modal-footer{padding:12px 20px;display:flex;gap:8px}
+.modal-header{padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;border-bottom:1px solid var(--gray-100)}
+.modal-header h3{font-size:15px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:7px}
+.modal-body{padding:14px 18px}
+.modal-footer{padding:10px 18px;display:flex;gap:8px}
 .modal-footer .btn{flex:1}
-.close-btn{background:none;border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-500);font-size:18px}
+.close-btn{background:none;border:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-500);font-size:17px}
 .close-btn:active{background:var(--gray-100)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 
 /* ── 백신 테이블 ── */
-.vax-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
-.vax-table th{background:var(--navy);color:#fff;padding:8px 6px;font-size:12px;text-align:center}
-.vax-table td{border:1px solid var(--gray-200);padding:2px}
-.vax-table input{width:100%;border:none;padding:7px 8px;font-size:14px;background:transparent;min-height:36px}
+.vax-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:5px}
+.vax-table th{background:var(--navy);color:#fff;padding:7px 5px;font-size:11px;text-align:center}
+.vax-table td{border:1px solid var(--gray-200);padding:1px}
+.vax-table input{width:100%;border:none;padding:7px 7px;font-size:14px;background:transparent;min-height:34px}
 .vax-table input:focus{background:#eff6ff;outline:none}
-.vax-del{background:none;border:none;color:var(--gray-400);padding:6px 8px;font-size:16px;cursor:pointer;min-height:36px}
+.vax-del{background:none;border:none;color:var(--gray-400);padding:5px 7px;font-size:15px;cursor:pointer;min-height:34px}
 
-/* ── 알림/공지 ── */
-.notice{background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:11px 14px;font-size:13px;color:#1e40af;display:flex;gap:8px;margin-bottom:14px}
-.setup-banner{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;display:flex;gap:10px}
+/* ── 알림 ── */
+.notice{background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:10px 13px;font-size:12px;color:#1e40af;display:flex;gap:7px;margin-bottom:12px}
+.setup-banner{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;gap:9px}
 .setup-banner i{color:#d97706;flex-shrink:0;margin-top:2px}
 
 /* ── 토스트 ── */
-.toast-wrap{position:fixed;bottom:calc(72px + var(--safe-bottom));left:50%;transform:translateX(-50%);z-index:600;display:flex;flex-direction:column;align-items:center;gap:6px;width:calc(100% - 32px);max-width:360px;pointer-events:none}
-.toast{padding:12px 18px;border-radius:10px;font-size:14px;font-weight:500;color:#fff;box-shadow:var(--shadow-lg);animation:toastIn .25s ease;width:100%;text-align:center}
-.toast.success{background:#137333}
-.toast.error{background:#c5221f}
-.toast.info{background:var(--navy)}
-@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.toast-wrap{position:fixed;bottom:calc(80px + var(--safe-bottom));left:50%;transform:translateX(-50%);z-index:600;display:flex;flex-direction:column;align-items:center;gap:5px;width:calc(100% - 28px);max-width:340px;pointer-events:none}
+.toast{padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;color:#fff;box-shadow:var(--shadow-lg);animation:toastIn .25s ease;width:100%;text-align:center}
+.toast.success{background:#137333}.toast.error{background:#c5221f}.toast.info{background:var(--navy)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── 로딩 ── */
-.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:700;gap:14px}
-.spinner{width:36px;height:36px;border:3px solid var(--gray-200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:700;gap:12px}
+.spinner{width:34px;height:34px;border:3px solid var(--gray-200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:14px;color:var(--navy);font-weight:500}
+.loading-text{font-size:13px;color:var(--navy);font-weight:500}
 
 /* ── 빈 상태 ── */
-.empty{text-align:center;padding:40px 20px;color:var(--gray-400)}
-.empty i{font-size:40px;color:var(--gray-300);display:block;margin-bottom:10px}
-.empty p{font-size:14px}
+.empty{text-align:center;padding:36px 18px;color:var(--gray-400)}
+.empty i{font-size:36px;color:var(--gray-300);display:block;margin-bottom:8px}
+.empty p{font-size:13px}
 
 /* ── 페이지 상단 ── */
-.page-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:16px}
-.page-top h1{font-size:20px;font-weight:700;color:var(--navy);line-height:1.3}
-.page-top-sub{font-size:13px;color:var(--gray-500);margin-top:3px}
+.page-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px}
+.page-top h1{font-size:19px;font-weight:700;color:var(--navy);line-height:1.3}
+.page-top-sub{font-size:12px;color:var(--gray-500);margin-top:2px}
+.page-top-actions{display:flex;gap:6px;flex-shrink:0;align-items:flex-start}
 
 /* ── 애니메이션 ── */
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeIn .2s ease}
-
-/* ── 스크롤바 ── */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:2px}
 
+/* ── 컨설팅 툴바 ── */
+.c-toolbar button{background:none;border:1px solid var(--gray-200);padding:5px 10px;font-size:12px;color:var(--gray-700);border-radius:6px;cursor:pointer;min-height:32px}
+.c-toolbar button:active{background:var(--gray-100)}
+
 /* ── 데스크탑 보완 ── */
 @media(min-width:600px){
-  .page{padding:24px 20px 80px}
+  .page{padding:22px 18px 88px}
   .farm-grid{grid-template-columns:repeat(3,1fr)}
-  .info-grid{grid-template-columns:repeat(5,1fr)}
-  .modal-overlay{justify-content:center;align-items:center;padding:20px}
-  .modal{border-radius:16px;max-width:560px;max-height:88vh;animation:fadeIn .22s ease}
+  .flock-kpi{grid-template-columns:repeat(3,1fr)}
+  .flock-kpi-item:nth-child(2n){border-right:1px solid var(--gray-100)}
+  .flock-kpi-item:nth-child(3n){border-right:none}
+  .flock-info-grid{grid-template-columns:repeat(4,1fr)}
+  .modal-overlay{justify-content:center;align-items:center;padding:18px}
+  .modal{border-radius:16px;max-width:540px;max-height:88vh;animation:fadeIn .2s ease}
   .modal-handle{display:none}
-  .fab{bottom:28px;right:28px}
-  .page-top h1{font-size:22px}
+  .page-top h1{font-size:21px}
+  .fab-area{bottom:24px;right:20px}
 }
 @media(min-width:900px){
   .farm-grid{grid-template-columns:repeat(5,1fr)}
-  .modal.wide{max-width:640px}
+  .flock-kpi{grid-template-columns:repeat(5,1fr)}
+  .flock-kpi-item{border-right:1px solid var(--gray-100)!important}
+  .flock-kpi-item:last-child{border-right:none!important}
+  .flock-info-grid{grid-template-columns:repeat(4,1fr)}
+  .modal.wide{max-width:620px}
 }
 </style>
 </head>
@@ -251,6 +265,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 </div>
 <div id="modal-container"></div>
 <div class="toast-wrap" id="toast-wrap"></div>
+<div class="fab-area" id="fab-area"></div>
 
 <script>
 // ================================================================
@@ -263,59 +278,67 @@ const CONFIG = {
 // ================================================================
 
 const API = {
-  async call(action, payload = {}) {
-    const body = { action, token: CONFIG.GAS_TOKEN, ...payload };
-    if (body.row && typeof body.row === 'object') body.row = JSON.stringify(body.row);
-    const res = await fetch(CONFIG.GAS_URL, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(body), redirect: 'follow',
-    });
-    const json = await res.json();
-    if (!json.success) throw new Error(json.error || '서버 오류');
+  async call(action, payload={}) {
+    const body={action,token:CONFIG.GAS_TOKEN,...payload};
+    if(body.row&&typeof body.row==='object') body.row=JSON.stringify(body.row);
+    const res=await fetch(CONFIG.GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body),redirect:'follow'});
+    const json=await res.json();
+    if(!json.success) throw new Error(json.error||'서버 오류');
     return json;
   },
   init:             ()    => API.call('initSheets'),
   getFarms:         ()    => API.call('getFarms'),
-  saveFarm:         (row) => API.call('saveFarm',           { row }),
-  deleteFarm:       (id)  => API.call('deleteFarm',         { id }),
+  saveFarm:         (row) => API.call('saveFarm',           {row}),
+  deleteFarm:       (id)  => API.call('deleteFarm',         {id}),
   getFlocks:        ()    => API.call('getFlocks'),
-  saveFlock:        (row) => API.call('saveFlock',          { row }),
-  deleteFlock:      (id)  => API.call('deleteFlock',        { id }),
+  saveFlock:        (row) => API.call('saveFlock',          {row}),
+  deleteFlock:      (id)  => API.call('deleteFlock',        {id}),
   getConsulting:    ()    => API.call('getConsulting'),
-  saveConsulting:   (row) => API.call('saveConsulting',     { row }),
-  deleteConsulting: (id)  => API.call('deleteConsulting',   { id }),
+  saveConsulting:   (row) => API.call('saveConsulting',     {row}),
+  deleteConsulting: (id)  => API.call('deleteConsulting',   {id}),
   getPerformance:   ()    => API.call('getPerformance'),
-  savePerformance:  (row) => API.call('savePerformance',    { row }),
-  deletePerformance:(id)  => API.call('deletePerformance',  { id }),
+  savePerformance:  (row) => API.call('savePerformance',    {row}),
+  deletePerformance:(id)  => API.call('deletePerformance',  {id}),
   getTech:          ()    => API.call('getTech'),
-  saveTech:         (row) => API.call('saveTech',           { row }),
-  deleteTech:       (id)  => API.call('deleteTech',         { id }),
+  saveTech:         (row) => API.call('saveTech',           {row}),
+  deleteTech:       (id)  => API.call('deleteTech',         {id}),
 };
 
-let DB = { farms:[], flocks:[], consulting:[], performance:[], tech:[] };
-let isConfigured = !CONFIG.GAS_URL.includes('YOUR_SCRIPT_ID');
+let DB={farms:[],flocks:[],consulting:[],performance:[],tech:[]};
+let isConfigured=!CONFIG.GAS_URL.includes('YOUR_SCRIPT_ID');
 
-let S = {
-  page:'main', farmId:null, flockId:null, tab:'consulting',
-  searchQ:'', searchActive:false,
-  techSearch:'', techSearchActive:false,
-  showTechPost:null, modal:null, modalData:{},
+let S={
+  page:'main',farmId:null,flockId:null,tab:'consulting',
+  searchQ:'',searchActive:false,
+  techSearch:'',techSearchActive:false,
+  showTechPost:null,modal:null,modalData:{},
 };
 
 // ── 유틸 ─────────────────────────────────────────────────────────
 const today     = () => new Date().toISOString().split('T')[0];
-const uid       = () => 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+const uid       = () => 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
 const fmt       = d => { if(!d) return '-'; const p=String(d).split('-'); return p.length===3?`${p[0]}.${p[1]}.${p[2]}`:'-'; };
-const daysSince = ds => Math.max(0, Math.floor((Date.now()-new Date(ds))/86400000));
+const daysSince = ds => Math.max(0,Math.floor((Date.now()-new Date(ds))/86400000));
 const calcWeek  = ds => Math.floor(daysSince(ds)/7);
 const numFmt    = n  => Number(n||0).toLocaleString();
 
+// 수정6: 주소에서 시군 단위 추출
+function extractCity(addr) {
+  if(!addr) return '';
+  // 시/군/구 패턴 추출
+  const m=addr.match(/([가-힣]+시\s[가-힣]+구|[가-힣]+시|[가-힣]+군)/);
+  if(!m) return addr.split(' ').slice(0,2).join(' ');
+  // "천안시 동남구" → "천안", "안성시" → "안성"
+  return m[1].replace(/시\s.*$/,'').replace(/[시군구]$/,'');
+}
+
 function getRecentFarms() {
-  const act = {}; DB.farms.forEach(f => { act[f.id]=0; });
-  const ts = id => { const m=String(id||'').match(/id_(\d+)/); return m?parseInt(m[1]):0; };
-  DB.consulting.forEach(c => { const fk=DB.flocks.find(f=>f.id===c.flockId); if(fk?.farmId) act[fk.farmId]=Math.max(act[fk.farmId]||0,ts(c.id)); });
-  DB.performance.forEach(p => { const fk=DB.flocks.find(f=>f.id===p.flockId); if(fk?.farmId) act[fk.farmId]=Math.max(act[fk.farmId]||0,ts(p.id)); });
-  DB.flocks.forEach(fk => { if(fk.farmId) act[fk.farmId]=Math.max(act[fk.farmId]||0,ts(fk.id)); });
+  const act={};
+  DB.farms.forEach(f=>{act[f.id]=0;});
+  const ts=id=>{const m=String(id||'').match(/id_(\d+)/);return m?parseInt(m[1]):0;};
+  DB.consulting.forEach(c=>{const fk=DB.flocks.find(f=>f.id===c.flockId);if(fk?.farmId)act[fk.farmId]=Math.max(act[fk.farmId]||0,ts(c.id));});
+  DB.performance.forEach(p=>{const fk=DB.flocks.find(f=>f.id===p.flockId);if(fk?.farmId)act[fk.farmId]=Math.max(act[fk.farmId]||0,ts(p.id));});
+  DB.flocks.forEach(fk=>{if(fk.farmId)act[fk.farmId]=Math.max(act[fk.farmId]||0,ts(fk.id));});
   return [...DB.farms].sort((a,b)=>(act[b.id]||0)-(act[a.id]||0)).slice(0,10);
 }
 
@@ -323,16 +346,16 @@ function certBadge(val) {
   const map={'무항생제':'badge-green','동물복지':'badge-blue','동물복지(방사)':'badge-purple'};
   return map[val]?`<span class="badge ${map[val]}">${val}</span>`:'';
 }
-const TAG_COLOR = {'질병':'badge-red','영양':'badge-green','약품':'badge-orange','품종':'badge-gold','통계':'badge-blue','관리':'badge-navy'};
+const TAG_COLOR={'질병':'badge-red','영양':'badge-green','약품':'badge-orange','품종':'badge-gold','통계':'badge-blue','관리':'badge-navy'};
 
 // ── Toast / Loading ──────────────────────────────────────────────
-function toast(msg, type='info') {
+function toast(msg,type='info'){
   const wrap=document.getElementById('toast-wrap');
   const el=document.createElement('div');
-  el.className=`toast ${type}`; el.textContent=msg;
-  wrap.appendChild(el); setTimeout(()=>el.remove(),3000);
+  el.className=`toast ${type}`;el.textContent=msg;
+  wrap.appendChild(el);setTimeout(()=>el.remove(),3000);
 }
-function showLoading(msg='불러오는 중...') {
+function showLoading(msg='불러오는 중...'){
   let el=document.getElementById('lo');
   if(!el){el=document.createElement('div');el.id='lo';el.className='loading-overlay';
     el.innerHTML=`<div class="spinner"></div><div class="loading-text">${msg}</div>`;
@@ -342,44 +365,45 @@ function showLoading(msg='불러오는 중...') {
 function hideLoading(){const el=document.getElementById('lo');if(el)el.style.display='none';}
 
 // ── 데이터 로드 ──────────────────────────────────────────────────
-async function loadAll() {
+async function loadAll(){
   if(!isConfigured) return;
   showLoading('데이터 불러오는 중...');
-  try {
-    const [a,b,c,d,e]=await Promise.all([API.getFarms(),API.getFlocks(),API.getConsulting(),API.getPerformance(),API.getTech()]);
-    DB.farms=a.data||[]; DB.flocks=b.data||[]; DB.consulting=c.data||[];
-    DB.performance=d.data||[]; DB.tech=e.data||[];
+  try{
+    const[a,b,c,d,e]=await Promise.all([API.getFarms(),API.getFlocks(),API.getConsulting(),API.getPerformance(),API.getTech()]);
+    DB.farms=a.data||[];DB.flocks=b.data||[];DB.consulting=c.data||[];
+    DB.performance=d.data||[];DB.tech=e.data||[];
     toast('불러오기 완료','success');
-  } catch(err){ toast('로드 실패: '+err.message,'error'); }
-  finally { hideLoading(); render(); }
+  }catch(err){toast('로드 실패: '+err.message,'error');}
+  finally{hideLoading();render();}
+}
+
+// ── FAB 영역 ─────────────────────────────────────────────────────
+function setFabs(fabs){
+  // fabs: [{icon, onclick, cls}]
+  const area=document.getElementById('fab-area');
+  area.innerHTML=fabs.map(f=>`
+    <button class="fab ${f.cls||'fab-main'}" onclick="${f.onclick}">
+      <i class="fas fa-${f.icon}"></i>
+    </button>`).join('');
 }
 
 // ── 라우터 ───────────────────────────────────────────────────────
-function nav(page, extra={}) {
+function nav(page,extra={}){
   S={...S,page,modal:null,showTechPost:null,...extra};
-  render(); window.scrollTo(0,0);
+  render();window.scrollTo(0,0);
 }
-function render() {
+function render(){
   const c=document.getElementById('main-content');
   c.className='page fade-in';
   updateBreadcrumb();
-  removeFab();
   if(S.page==='main')  renderMain(c);
   else if(S.page==='farm')  renderFarm(c);
   else if(S.page==='flock') renderFlock(c);
   else if(S.page==='tech')  renderTech(c);
   renderModal();
 }
-function removeFab(){const f=document.getElementById('main-fab');if(f)f.remove();}
-function addFab(icon,onclick,gold=false){
-  removeFab();
-  const b=document.createElement('button');
-  b.id='main-fab'; b.className='fab'+(gold?' fab-gold':'');
-  b.innerHTML=`<i class="fas fa-${icon}"></i>`;
-  b.onclick=onclick; document.body.appendChild(b);
-}
 
-function updateBreadcrumb() {
+function updateBreadcrumb(){
   const el=document.getElementById('breadcrumb-area');
   if(S.page==='main'){el.innerHTML='';return;}
   let html=`<span onclick="nav('main')"><i class="fas fa-home"></i></span><span class="sep">›</span>`;
@@ -387,7 +411,7 @@ function updateBreadcrumb() {
   else if(S.page==='farm'){
     const f=DB.farms.find(x=>x.id===S.farmId);
     html+=`<span class="current">${f?f.name:''}</span>`;
-  } else if(S.page==='flock'){
+  }else if(S.page==='flock'){
     const f=DB.farms.find(x=>x.id===S.farmId);
     const fk=DB.flocks.find(x=>x.id===S.flockId);
     html+=`<span onclick="nav('farm',{farmId:'${S.farmId}'})">${f?f.name:''}</span>`;
@@ -397,7 +421,7 @@ function updateBreadcrumb() {
 }
 
 // ── 메인 ─────────────────────────────────────────────────────────
-function renderMain(c) {
+function renderMain(c){
   const topFarms=getRecentFarms();
   const q=S.searchActive?S.searchQ.toLowerCase():null;
   const all=[...DB.farms].sort((a,b)=>a.name.localeCompare(b.name,'ko'));
@@ -406,10 +430,10 @@ function renderMain(c) {
   const warn=!isConfigured?`
     <div class="setup-banner">
       <i class="fas fa-triangle-exclamation"></i>
-      <div style="font-size:13px">
-        <div style="font-weight:700;margin-bottom:4px">구글시트 연동 설정 필요</div>
-        CODE.GAS_URL에 배포 URL을 입력하고 GitHub에 업로드하세요.
-        <br><button class="btn btn-gold btn-sm" style="margin-top:8px" onclick="openModal('initSheets')">
+      <div style="font-size:12px">
+        <div style="font-weight:700;margin-bottom:3px">구글시트 연동 설정 필요</div>
+        CONFIG.GAS_URL에 배포 URL을 입력하고 GitHub에 업로드하세요.
+        <br><button class="btn btn-gold btn-sm" style="margin-top:7px" onclick="openModal('initSheets')">
           <i class="fas fa-database"></i> 시트 초기화
         </button>
       </div>
@@ -417,12 +441,12 @@ function renderMain(c) {
 
   c.innerHTML=`
     ${warn}
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
       <div>
-        <div style="font-size:22px;font-weight:700;color:var(--navy)">산란계 솔루션</div>
-        <div style="font-size:13px;color:var(--gray-500);margin-top:2px">컨설팅 통합 관리</div>
+        <div style="font-size:20px;font-weight:700;color:var(--navy)">산란계 솔루션</div>
+        <div style="font-size:12px;color:var(--gray-500);margin-top:1px">컨설팅 통합 관리</div>
       </div>
-      <div style="display:flex;gap:6px">
+      <div style="display:flex;gap:5px">
         <button class="btn btn-ghost btn-sm" onclick="loadAll()"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-secondary btn-sm" onclick="nav('tech')"><i class="fas fa-book-open"></i> 기술정보</button>
       </div>
@@ -433,7 +457,7 @@ function renderMain(c) {
         <h2><i class="fas fa-th-large"></i> 농장 목록</h2>
         <span class="badge badge-navy">${DB.farms.length}곳</span>
       </div>
-      <div class="card-body" style="padding:12px">
+      <div class="card-body" style="padding:10px">
         ${topFarms.length===0
           ?`<div class="empty"><i class="fas fa-warehouse"></i><p>농장을 추가해 주세요.</p></div>`
           :`<div class="farm-grid">${topFarms.map(f=>farmCard(f)).join('')}</div>`}
@@ -442,7 +466,7 @@ function renderMain(c) {
 
     <div class="card">
       <div class="card-header"><h2><i class="fas fa-search"></i> 농장 검색</h2></div>
-      <div class="card-body" style="padding:12px 14px">
+      <div class="card-body" style="padding:10px 12px">
         <div class="search-wrap">
           <div class="search-input-wrap">
             <i class="fas fa-search"></i>
@@ -454,39 +478,45 @@ function renderMain(c) {
           <button class="search-submit" onclick="S.searchActive=true;render()">검색</button>
         </div>
         ${!S.searchActive
-          ?`<p style="font-size:13px;color:var(--gray-400);text-align:center;padding:12px 0">검색어 입력 후 검색 버튼을 누르세요.</p>`
+          ?`<p style="font-size:12px;color:var(--gray-400);text-align:center;padding:10px 0">검색어 입력 후 검색을 누르세요.</p>`
           :results&&results.length===0
-          ?`<p style="font-size:13px;color:var(--gray-400);text-align:center;padding:12px 0">검색 결과가 없습니다.</p>`
+          ?`<p style="font-size:12px;color:var(--gray-400);text-align:center;padding:10px 0">검색 결과가 없습니다.</p>`
           :(results||[]).map(f=>`
             <div onclick="nav('farm',{farmId:'${f.id}'})"
-              style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid var(--gray-200);margin-bottom:8px;cursor:pointer">
+              style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;border:1px solid var(--gray-200);margin-bottom:7px;cursor:pointer">
               <div style="flex:1;min-width:0">
-                <div style="font-weight:600;font-size:14px;color:var(--navy)">${f.name}</div>
-                <div style="font-size:12px;color:var(--gray-500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.owner||''} · ${f.address||''}</div>
+                <div style="font-weight:600;font-size:13px;color:var(--navy)">${f.name} <span style="font-weight:400;color:var(--gray-500)">${f.owner||''}</span></div>
+                <div style="font-size:11px;color:var(--gray-500);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.address||''}</div>
               </div>
-              <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:13px;flex-shrink:0"></i>
+              <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:12px;flex-shrink:0"></i>
             </div>`).join('')}
       </div>
     </div>`;
 
-  addFab('plus', ()=>openModal('addFarm'), true);
+  // 수정5: 메인은 뒤로가기 없음, 농장추가만
+  setFabs([{icon:'plus',onclick:"openModal('addFarm')",cls:'fab-gold'}]);
 }
 
-function farmCard(f) {
+// 수정6: 농장카드 - 이름+농장주 / 시군+수수
+function farmCard(f){
   const scale=f.scale?(Number(f.scale)/10000).toFixed(0)+'만수':'-';
+  const city=extractCity(f.address);
   return `
     <div class="farm-card" onclick="nav('farm',{farmId:'${f.id}'})">
-      <div class="farm-card-name">${f.name}</div>
-      <div class="farm-card-owner">${f.owner||''}</div>
-      <div class="farm-card-meta">
-        <span class="badge badge-navy" style="font-size:10px">${scale}</span>
+      <div class="fc-top">
+        <span class="fc-name">${f.name}</span>
+        <span class="fc-owner">${f.owner||''}</span>
+      </div>
+      <div class="fc-bottom">
+        ${city?`<span class="fc-addr"><i class="fas fa-map-marker-alt" style="font-size:9px;color:var(--gray-400)"></i> ${city}</span>`:'' }
+        <span class="fc-scale">${scale}</span>
         ${certBadge(f.antibiotic)}
       </div>
     </div>`;
 }
 
-// ── 농장 ─────────────────────────────────────────────────────────
-function renderFarm(c) {
+// ── 농장 페이지 ──────────────────────────────────────────────────
+function renderFarm(c){
   const farm=DB.farms.find(f=>f.id===S.farmId)||{};
   const flocks=DB.flocks.filter(f=>f.farmId===S.farmId);
   const cCount=DB.consulting.filter(c=>DB.flocks.find(f=>f.id===c.flockId&&f.farmId===S.farmId)).length;
@@ -497,14 +527,19 @@ function renderFarm(c) {
         <h1>${farm.name||''}</h1>
         <div class="page-top-sub">${farm.owner||''}</div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="openModal('editFarm',{farmId:'${farm.id}'})">
-        <i class="fas fa-edit"></i> 수정
-      </button>
+      <div class="page-top-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openModal('editFarm',{farmId:'${farm.id}'})">
+          <i class="fas fa-pencil-alt"></i> 수정
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteFarm('${farm.id}')">
+          <i class="fas fa-trash"></i> 삭제
+        </button>
+      </div>
     </div>
 
     <div class="card">
       <div class="card-header"><h2><i class="fas fa-info-circle"></i> 농장 정보</h2></div>
-      <div class="card-body" style="padding:0 16px">
+      <div class="card-body" style="padding:0 14px">
         <div class="info-list">
           <div class="info-item"><span class="info-key">주소</span><span class="info-val">${farm.address||'-'}</span></div>
           <div class="info-item"><span class="info-key">사육규모</span><span class="info-val">${farm.scale?numFmt(farm.scale)+'수':'-'}</span></div>
@@ -520,12 +555,12 @@ function renderFarm(c) {
     </div>
 
     <div class="card">
-      <div class="card-body" style="padding:12px 16px">
-        <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:7px"><i class="fas fa-sticky-note" style="margin-right:4px;color:var(--gold)"></i>농장 메모</div>
+      <div class="card-body" style="padding:11px 14px">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:6px"><i class="fas fa-sticky-note" style="margin-right:3px;color:var(--gold)"></i>농장 메모</div>
         <textarea id="farm-memo-${farm.id}" class="form-control" rows="3"
           placeholder="농장 관련 메모를 입력하세요."
           style="font-size:14px;resize:none">${farm.memo||''}</textarea>
-        <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%" onclick="saveFarmMemo('${farm.id}')">
+        <button class="btn btn-primary btn-sm" style="margin-top:7px;width:100%" onclick="saveFarmMemo('${farm.id}')">
           <i class="fas fa-save"></i> 메모 저장
         </button>
       </div>
@@ -538,38 +573,78 @@ function renderFarm(c) {
       </div>
       ${flocks.length===0
         ?`<div class="empty"><i class="fas fa-warehouse"></i><p>등록된 계군이 없습니다.</p></div>`
-        :flocks.map(fk=>{
-          const age=calcWeek(fk.inDate);
-          return `
-            <div class="flock-row" onclick="nav('flock',{farmId:'${S.farmId}',flockId:'${fk.id}',tab:'consulting'})">
-              <div class="flock-dot">${(fk.dong||'?')[0]}</div>
-              <div class="flock-info">
-                <div class="flock-name">${fk.dong}</div>
-                <div class="flock-sub">${fk.breed||''} · ${numFmt(fk.count||0)}수</div>
-              </div>
-              <div class="flock-right">
-                <span class="badge badge-blue" style="font-size:10px">입추 ${fmt(fk.inDate)}</span>
-                <span class="badge badge-gold" style="font-size:10px">${age}주령</span>
-              </div>
-              <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:13px;margin-left:4px"></i>
-            </div>`;
-        }).join('')}
+        :`<div style="padding:10px">${flocks.map(fk=>flockCard(fk)).join('')}</div>`}
     </div>`;
 
-  addFab('plus', ()=>openModal('addFlock'));
+  // 수정5: 뒤로가기(메인) + 추가
+  setFabs([
+    {icon:'arrow-left',onclick:"nav('main')",cls:'fab-back'},
+    {icon:'plus',onclick:"openModal('addFlock')",cls:'fab-main'},
+  ]);
 }
 
-async function saveFarmMemo(farmId) {
+// 수정4: 계군 KPI 카드
+function flockCard(fk){
+  const age=calcWeek(fk.inDate);
+  const da=daysSince(fk.inDate);
+  const cCnt=DB.consulting.filter(x=>x.flockId===fk.id).length;
+  const pCnt=DB.performance.filter(x=>x.flockId===fk.id).length;
+  return `
+    <div class="flock-card" onclick="nav('flock',{farmId:'${S.farmId}',flockId:'${fk.id}',tab:'consulting'})">
+      <div class="flock-card-head">
+        <div>
+          <div class="flock-card-title">${fk.dong}</div>
+          <div class="flock-card-breed">${fk.breed||''}</div>
+        </div>
+        <i class="fas fa-chevron-right" style="opacity:.6;font-size:13px"></i>
+      </div>
+      <div class="flock-kpi">
+        <div class="flock-kpi-item"><div class="flock-kpi-val">${age}주</div><div class="flock-kpi-lbl">주령</div></div>
+        <div class="flock-kpi-item"><div class="flock-kpi-val">${da}일</div><div class="flock-kpi-lbl">일령</div></div>
+        <div class="flock-kpi-item"><div class="flock-kpi-val">${numFmt(fk.count||0)}</div><div class="flock-kpi-lbl">사육수수</div></div>
+        <div class="flock-kpi-item"><div class="flock-kpi-val">${cCnt}</div><div class="flock-kpi-lbl">컨설팅</div></div>
+        <div class="flock-kpi-item"><div class="flock-kpi-val">${pCnt}</div><div class="flock-kpi-lbl">성적기록</div></div>
+      </div>
+      <div class="flock-card-foot">
+        <span class="badge badge-blue" style="font-size:10px">입추 ${fmt(fk.inDate)}</span>
+        <span class="badge badge-gold" style="font-size:10px">이동 ${fmt(fk.moveDate)}</span>
+        <div style="flex:1"></div>
+        <button class="btn btn-ghost btn-sm btn-icon-only" onclick="event.stopPropagation();openModal('editFlock',{flockId:'${fk.id}'})">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn btn-danger btn-sm btn-icon-only" onclick="event.stopPropagation();confirmDeleteFlock('${fk.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>`;
+}
+
+// 수정1: 농장 삭제 확인
+function confirmDeleteFarm(id){
+  if(!confirm('농장을 삭제하면 해당 계군/컨설팅 데이터도 모두 삭제됩니다. 계속하시겠습니까?')) return;
+  deleteItem('farms',id);
+  nav('main');
+}
+// 수정1: 계군 삭제 확인
+function confirmDeleteFlock(id){
+  if(!confirm('계군을 삭제하시겠습니까?')) return;
+  deleteItem('flocks',id);
+}
+
+async function saveFarmMemo(farmId){
   const farm=DB.farms.find(x=>x.id===farmId)||{};
-  const memo=document.getElementById('farm-memo-'+farmId).value;
-  await syncSave('farms',{...farm,memo},API.saveFarm,'메모 저장 완료.',true);
+  const memo=document.getElementById('farm-memo-'+farmId)?.value||'';
+  // 수정9: memo 포함 전체 farm row를 GAS에 저장
+  const row={...farm,memo};
+  await syncSave('farms',row,API.saveFarm,'메모 저장 완료.',true);
 }
 
-// ── 계군 ─────────────────────────────────────────────────────────
-function renderFlock(c) {
+// ── 계군 페이지 ──────────────────────────────────────────────────
+function renderFlock(c){
   const fk=DB.flocks.find(x=>x.id===S.flockId)||{};
   const farm=DB.farms.find(x=>x.id===S.farmId)||{};
   const age=calcWeek(fk.inDate||today());
+  const da=daysSince(fk.inDate||today());
   const list=DB.consulting.filter(x=>x.flockId===S.flockId);
   const perfs=DB.performance.filter(x=>x.flockId===S.flockId);
 
@@ -577,21 +652,26 @@ function renderFlock(c) {
     <div class="page-top">
       <div>
         <h1>${farm.name||''} · ${fk.dong||''}</h1>
-        <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap">
+        <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
           <span class="badge badge-blue">${fk.breed||''}</span>
           <span class="badge badge-gold">${age}주령</span>
         </div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="openModal('editFlock',{flockId:'${fk.id}'})">
-        <i class="fas fa-edit"></i> 수정
-      </button>
+      <div class="page-top-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openModal('editFlock',{flockId:'${fk.id}'})">
+          <i class="fas fa-pencil-alt"></i> 수정
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteFlock('${fk.id}')">
+          <i class="fas fa-trash"></i> 삭제
+        </button>
+      </div>
     </div>
 
-    <div class="info-grid" style="grid-template-columns:1fr 1fr">
-      <div class="info-cell"><span class="info-cell-label">사육수수</span><span class="info-cell-value">${numFmt(fk.count||0)}수</span></div>
-      <div class="info-cell"><span class="info-cell-label">현재 일령</span><span class="info-cell-value">${daysSince(fk.inDate||today())}일</span></div>
-      <div class="info-cell"><span class="info-cell-label">입추일</span><span class="info-cell-value">${fmt(fk.inDate)}</span></div>
-      <div class="info-cell"><span class="info-cell-label">중추이동일</span><span class="info-cell-value">${fmt(fk.moveDate)}</span></div>
+    <div class="flock-info-grid">
+      <div class="flock-info-cell"><span class="flock-info-label">사육수수</span><span class="flock-info-value">${numFmt(fk.count||0)}수</span></div>
+      <div class="flock-info-cell"><span class="flock-info-label">현재 일령</span><span class="flock-info-value">${da}일</span></div>
+      <div class="flock-info-cell"><span class="flock-info-label">입추일</span><span class="flock-info-value">${fmt(fk.inDate)}</span></div>
+      <div class="flock-info-cell"><span class="flock-info-label">중추이동일</span><span class="flock-info-value">${fmt(fk.moveDate)}</span></div>
     </div>
 
     <div class="tabs">
@@ -607,11 +687,22 @@ function renderFlock(c) {
 
     ${S.tab==='consulting'?renderConsultingTab(fk,list):renderPerfTab(fk,perfs)}`;
 
-  if(S.tab==='consulting') addFab('plus',()=>openModal('addConsulting',{flockId:fk.id}));
-  else addFab('plus',()=>openModal('addPerf',{flockId:fk.id,breed:fk.breed||'',weekAge:Math.floor(daysSince(fk.inDate||today())/7),dayAge:daysSince(fk.inDate||today())}));
+  // 수정5: 뒤로가기(농장) + 등록
+  if(S.tab==='consulting'){
+    setFabs([
+      {icon:'arrow-left',onclick:`nav('farm',{farmId:'${S.farmId}'})`,cls:'fab-back'},
+      {icon:'plus',onclick:`openModal('addConsulting',{flockId:'${fk.id}'})`,cls:'fab-main'},
+    ]);
+  }else{
+    setFabs([
+      {icon:'arrow-left',onclick:`nav('farm',{farmId:'${S.farmId}'})`,cls:'fab-back'},
+      {icon:'plus',onclick:`openModal('addPerf',{flockId:'${fk.id}',breed:'${fk.breed||''}',weekAge:${Math.floor(da/7)},dayAge:${da}})`,cls:'fab-main'},
+    ]);
+  }
 }
 
-function renderConsultingTab(fk, list) {
+// 수정2: 컨설팅 탭 - 연필(수정) + 휴지통(삭제) 버튼
+function renderConsultingTab(fk,list){
   const sorted=[...list].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   return sorted.length===0
     ?`<div class="empty"><i class="fas fa-clipboard"></i><p>등록된 컨설팅이 없습니다.</p></div>`
@@ -619,9 +710,14 @@ function renderConsultingTab(fk, list) {
       <div class="c-card">
         <div class="c-card-head">
           <div class="c-card-date"><i class="fas fa-calendar-day"></i> ${fmt(item.date)} · ${item.week||''}주령</div>
-          <button class="btn btn-danger btn-sm" style="min-height:30px;padding:4px 10px" onclick="deleteItem('consulting','${item.id}')">
-            <i class="fas fa-trash"></i>
-          </button>
+          <div class="c-card-acts">
+            <button class="btn btn-ghost btn-sm btn-icon-only" onclick="openModal('editConsulting',{id:'${item.id}'})" title="수정">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+            <button class="btn btn-danger btn-sm btn-icon-only" onclick="deleteItem('consulting','${item.id}')" title="삭제">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
         </div>
         <div class="c-card-body">
           <div class="c-card-content">${item.content||''}</div>
@@ -639,33 +735,36 @@ function renderConsultingTab(fk, list) {
       </div>`).join('');
 }
 
-function renderPerfTab(fk, list) {
-  const da=daysSince(fk.inDate||today()), wk=Math.floor(da/7);
+// 수정2: 성적 탭 - 연필(수정) + 휴지통(삭제)
+function renderPerfTab(fk,list){
+  const da=daysSince(fk.inDate||today()),wk=Math.floor(da/7);
   const sorted=[...list].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   return `
-    <div class="notice" style="margin-bottom:12px">
-      <i class="fas fa-info-circle"></i>
-      오늘 기준 · ${da}일령 · ${wk}주령
-    </div>
+    <div class="notice"><i class="fas fa-info-circle"></i>오늘 기준 · ${da}일령 · ${wk}주령</div>
     <div class="card" style="margin-bottom:0">
       <div class="table-wrap">
-        <table class="table" style="min-width:520px">
+        <table class="table" style="min-width:500px">
           <thead><tr>
-            <th>날짜</th><th>주령</th><th>체중</th><th>산란율</th><th>오파란</th><th>난중</th><th>폐사</th><th></th>
+            <th>날짜</th><th>주령</th><th>체중</th><th>산란율</th><th>오파란</th><th>난중</th><th>폐사</th><th>관리</th>
           </tr></thead>
           <tbody>
             ${sorted.length===0
-              ?`<tr><td colspan="8" style="padding:24px;color:var(--gray-400)">데이터 없음</td></tr>`
+              ?`<tr><td colspan="8" style="padding:22px;color:var(--gray-400)">데이터 없음</td></tr>`
               :sorted.map(p=>`
                 <tr>
-                  <td style="white-space:nowrap">${fmt(p.date)}</td>
+                  <td style="white-space:nowrap;font-size:11px">${fmt(p.date)}</td>
                   <td>${p.weekAge||'-'}</td>
                   <td>${p.weight||'-'}</td>
                   <td style="color:${Number(p.layRate)>=90?'#137333':'inherit'};font-weight:600">${p.layRate||'-'}</td>
                   <td>${p.dirtyRate||'-'}</td>
                   <td>${p.eggWeight||'-'}</td>
                   <td style="color:${Number(p.mortality)>5?'#c5221f':'inherit'}">${p.mortality||0}</td>
-                  <td><button class="btn btn-danger" style="min-height:30px;padding:4px 8px;font-size:12px" onclick="deleteItem('performance','${p.id}')"><i class="fas fa-trash"></i></button></td>
+                  <td>
+                    <div style="display:flex;gap:4px;justify-content:center">
+                      <button class="btn btn-ghost btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="openModal('editPerf',{id:'${p.id}'})"><i class="fas fa-pencil-alt" style="font-size:11px"></i></button>
+                      <button class="btn btn-danger btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="deleteItem('performance','${p.id}')"><i class="fas fa-trash" style="font-size:11px"></i></button>
+                    </div>
+                  </td>
                 </tr>`).join('')}
           </tbody>
         </table>
@@ -673,8 +772,8 @@ function renderPerfTab(fk, list) {
     </div>`;
 }
 
-// ── 기술정보 ─────────────────────────────────────────────────────
-function renderTech(c) {
+// ── 기술정보 페이지 ───────────────────────────────────────────────
+function renderTech(c){
   const q=S.techSearchActive?S.techSearch.toLowerCase():'';
   const posts=!S.techSearchActive?DB.tech:DB.tech.filter(p=>
     (p.title||'').toLowerCase().includes(q)||(p.tag||'').toLowerCase().includes(q)||(p.keywords||'').toLowerCase().includes(q)
@@ -683,19 +782,19 @@ function renderTech(c) {
   if(S.showTechPost){
     const post=DB.tech.find(p=>p.id===S.showTechPost)||{};
     const kws=String(post.keywords||'').split(',').filter(Boolean);
-    return c.innerHTML=`
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    c.innerHTML=`
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
         <button class="btn btn-ghost btn-sm" onclick="S.showTechPost=null;render()"><i class="fas fa-arrow-left"></i></button>
-        <h1 style="font-size:17px;font-weight:700;color:var(--navy);flex:1;line-height:1.4">${post.title||''}</h1>
+        <h1 style="font-size:16px;font-weight:700;color:var(--navy);flex:1;line-height:1.4">${post.title||''}</h1>
       </div>
       <div class="card">
         <div class="card-body">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+          <div style="display:flex;gap:7px;align-items:center;margin-bottom:10px">
             <span class="badge ${TAG_COLOR[post.tag]||'badge-gray'} post-tag">${post.tag||''}</span>
-            <span style="font-size:12px;color:var(--gray-500)">${fmt(post.date)}</span>
+            <span style="font-size:11px;color:var(--gray-500)">${fmt(post.date)}</span>
           </div>
-          <p style="font-size:15px;line-height:1.8;white-space:pre-wrap;margin-bottom:16px">${post.content||''}</p>
-          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px">
+          <p style="font-size:14px;line-height:1.8;white-space:pre-wrap;margin-bottom:14px">${post.content||''}</p>
+          <div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px">
             ${kws.map(k=>`<span class="kw-tag">#${k.trim()}</span>`).join('')}
           </div>
           <button class="btn btn-danger btn-sm" style="width:100%" onclick="deleteItem('tech','${post.id}')">
@@ -703,13 +802,15 @@ function renderTech(c) {
           </button>
         </div>
       </div>`;
+    setFabs([{icon:'arrow-left',onclick:"S.showTechPost=null;render()",cls:'fab-back'}]);
+    return;
   }
 
   c.innerHTML=`
     <div class="page-top">
-      <h1><i class="fas fa-book-open" style="color:var(--gold);margin-right:6px"></i>기술정보</h1>
+      <h1><i class="fas fa-book-open" style="color:var(--gold);margin-right:5px"></i>기술정보</h1>
     </div>
-    <div class="search-wrap" style="margin-bottom:12px">
+    <div class="search-wrap">
       <div class="search-input-wrap">
         <i class="fas fa-search"></i>
         <input class="search-input" type="text" placeholder="제목, 말머리, 키워드 검색"
@@ -731,19 +832,22 @@ function renderTech(c) {
                 <div class="post-title">${p.title||''}</div>
                 <div class="post-meta">${fmt(p.date)} ${kws.map(k=>`<span class="kw-tag">#${k.trim()}</span>`).join('')}</div>
               </div>
-              <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:13px;flex-shrink:0;margin-top:2px"></i>
+              <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:12px;flex-shrink:0;margin-top:2px"></i>
             </div>`;
         }).join('')}
     </div>`;
 
-  addFab('plus',()=>openModal('addTech'));
+  setFabs([
+    {icon:'arrow-left',onclick:"nav('main')",cls:'fab-back'},
+    {icon:'plus',onclick:"openModal('addTech')",cls:'fab-main'},
+  ]);
 }
 
 // ── 모달 ─────────────────────────────────────────────────────────
 function openModal(name,data={}){S.modal=name;S.modalData=data;renderModal();}
 function closeModal(){S.modal=null;S.modalData={};document.getElementById('modal-container').innerHTML='';}
 
-function renderModal() {
+function renderModal(){
   const mc=document.getElementById('modal-container');
   const m=S.modal;
   if(!m){mc.innerHTML='';return;}
@@ -764,6 +868,10 @@ function renderModal() {
   const certOpts=(cur)=>['일반','무항생제','동물복지','동물복지(방사)']
     .map(v=>`<option value="${v}" ${cur===v?'selected':''}>${v}</option>`).join('');
 
+  // 수정7: 품종 목록 변경
+  const BREEDS=['Hy-Line Brown','ISA Brown','Lohmann Brown','Tetra','토종닭','메추리'];
+  const breedOpts=(cur)=>BREEDS.map(b=>`<option ${cur===b?'selected':''}>${b}</option>`).join('');
+
   const vaxRows=(rows=[])=>{
     const list=rows.length?rows:Array(5).fill({dayAge:'',vaccine:'',note:''});
     return list.map((r,i)=>`
@@ -780,16 +888,17 @@ function renderModal() {
     <div class="form-group">
       <label class="form-label">백신 프로그램</label>
       <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-        <table class="vax-table" id="vaccine-table" style="min-width:300px">
-          <thead><tr><th style="width:70px">일령</th><th>백신</th><th>비고</th></tr></thead>
+        <table class="vax-table" style="min-width:280px">
+          <thead><tr><th style="width:65px">일령</th><th>백신</th><th>비고</th></tr></thead>
           <tbody id="vaccine-tbody">${vaxRows(rows)}</tbody>
         </table>
       </div>
-      <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%" onclick="addVaxRow()">
+      <button type="button" class="btn btn-ghost btn-sm" style="margin-top:7px;width:100%" onclick="addVaxRow()">
         <i class="fas fa-plus"></i> 행 추가
       </button>
     </div>`;
 
+  // 농장 추가
   if(m==='addFarm'){
     mc.innerHTML=wrap('농장 추가','plus',
       `<div class="form-group"><label class="form-label">농장명 *</label><input class="form-control" id="m-name" placeholder="예: F농장"></div>
@@ -805,7 +914,7 @@ function renderModal() {
   }
   else if(m==='editFarm'){
     const f=DB.farms.find(x=>x.id===S.modalData.farmId)||{};
-    mc.innerHTML=wrap('농장 수정','edit',
+    mc.innerHTML=wrap('농장 수정','pencil-alt',
       `<div class="form-group"><label class="form-label">농장명</label><input class="form-control" id="e-name" value="${f.name||''}"></div>
        <div class="form-row">
          <div class="form-group"><label class="form-label">대표자명</label><input class="form-control" id="e-owner" value="${f.owner||''}"></div>
@@ -817,91 +926,83 @@ function renderModal() {
        <button class="btn btn-primary" onclick="updateFarm('${f.id}')"><i class="fas fa-save"></i> 저장</button>`
     );
   }
-  else if(m==='addFlock'){
-    mc.innerHTML=wrap('계군 추가','plus',
+  else if(m==='addFlock'||m==='editFlock'){
+    const isEdit=(m==='editFlock');
+    const fk=isEdit?(DB.flocks.find(x=>x.id===S.modalData.flockId)||{}):{};
+    let vr=[]; if(isEdit){try{vr=JSON.parse(fk.vaccineNote||'[]');}catch(e){}}
+    mc.innerHTML=wrap(isEdit?'계군 수정':'계군 추가',isEdit?'pencil-alt':'plus',
       `<div class="form-row">
-         <div class="form-group"><label class="form-label">동번호 *</label><input class="form-control" id="fk-dong" placeholder="예: 6동"></div>
-         <div class="form-group"><label class="form-label">사육수수</label><input type="number" class="form-control" id="fk-count" placeholder="10000"></div>
+         <div class="form-group"><label class="form-label">동번호 *</label><input class="form-control" id="fk-dong" value="${fk.dong||''}" placeholder="예: 6동"></div>
+         <div class="form-group"><label class="form-label">사육수수</label><input type="number" class="form-control" id="fk-count" value="${fk.count||''}" placeholder="10000"></div>
        </div>
        <div class="form-group"><label class="form-label">품종</label>
-         <select class="form-control" id="fk-breed">
-           <option>Hy-Line Brown</option><option>ISA Brown</option><option>Nick Chick</option><option>Lohmann Brown</option><option>기타</option>
-         </select>
+         <select class="form-control" id="fk-breed">${breedOpts(fk.breed||'')}</select>
        </div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${today()}"></div>
-         <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move"></div>
-       </div>
-       ${vaxTable()}`,
-      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
-       <button class="btn btn-primary" onclick="saveFlock()"><i class="fas fa-save"></i> 저장</button>`,true
-    );
-  }
-  else if(m==='editFlock'){
-    const fk=DB.flocks.find(x=>x.id===S.modalData.flockId)||{};
-    let vr=[]; try{vr=JSON.parse(fk.vaccineNote||'[]');}catch(e){}
-    mc.innerHTML=wrap('계군 수정','edit',
-      `<div class="form-row">
-         <div class="form-group"><label class="form-label">동번호</label><input class="form-control" id="fk-dong" value="${fk.dong||''}"></div>
-         <div class="form-group"><label class="form-label">사육수수</label><input type="number" class="form-control" id="fk-count" value="${fk.count||''}"></div>
-       </div>
-       <div class="form-group"><label class="form-label">품종</label>
-         <select class="form-control" id="fk-breed">
-           ${['Hy-Line Brown','ISA Brown','Nick Chick','Lohmann Brown','기타'].map(b=>`<option ${fk.breed===b?'selected':''}>${b}</option>`).join('')}
-         </select>
-       </div>
-       <div class="form-row">
-         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${fk.inDate||''}"></div>
+         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${fk.inDate||today()}"></div>
          <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move" value="${fk.moveDate||''}"></div>
        </div>
        ${vaxTable(vr)}`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
-       <button class="btn btn-primary" onclick="updateFlock('${fk.id}')"><i class="fas fa-save"></i> 저장</button>`,true
+       <button class="btn btn-primary" onclick="${isEdit?`updateFlock('${fk.id}')`:'saveFlock()'}"><i class="fas fa-save"></i> 저장</button>`,true
     );
   }
-  else if(m==='addConsulting'){
-    const fk=DB.flocks.find(x=>x.id===S.modalData.flockId)||{};
+  // 수정3: 컨설팅 등록/수정 - 툴바 버튼 fix
+  else if(m==='addConsulting'||m==='editConsulting'){
+    const isEdit=(m==='editConsulting');
+    const item=isEdit?(DB.consulting.find(x=>x.id===S.modalData.id)||{}):{};
+    const fkId=isEdit?item.flockId:S.modalData.flockId;
+    const fk=DB.flocks.find(x=>x.id===fkId)||{};
     const wk=calcWeek(fk.inDate||today());
-    mc.innerHTML=wrap('컨설팅 등록','clipboard-plus',
+    mc.innerHTML=wrap(isEdit?'컨설팅 수정':'컨설팅 등록',isEdit?'pencil-alt':'clipboard-plus',
       `<div class="form-row">
-         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="c-date" value="${today()}"></div>
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="c-date" value="${isEdit?item.date:today()}"></div>
          <div class="form-group"><label class="form-label">주령</label><input class="form-control" value="${wk}주령" readonly style="background:var(--gray-50)"></div>
        </div>
        <div class="form-group">
          <label class="form-label">내용</label>
          <div style="border:1.5px solid var(--gray-300);border-radius:var(--radius);overflow:hidden">
-           <div style="background:var(--gray-50);padding:6px 10px;border-bottom:1px solid var(--gray-200);display:flex;gap:6px">
-             <button type="button" onclick="insertText('c-content','\n• ')" style="background:none;border:none;padding:5px 10px;font-size:13px;color:var(--gray-700);border-radius:4px;min-height:34px">• 목록</button>
-             <button type="button" onclick="insertText('c-content','\n1. ')" style="background:none;border:none;padding:5px 10px;font-size:13px;color:var(--gray-700);border-radius:4px;min-height:34px">1. 번호</button>
-             <button type="button" onclick="insertText('c-content','【 】')" style="background:none;border:none;padding:5px 10px;font-size:13px;color:var(--gray-700);border-radius:4px;min-height:34px">【】기호</button>
+           <div class="c-toolbar" style="background:var(--gray-50);padding:5px 8px;border-bottom:1px solid var(--gray-200);display:flex;gap:5px">
+             <button type="button" id="btn-list">• 목록</button>
+             <button type="button" id="btn-num">1. 번호</button>
+             <button type="button" id="btn-sym">【】기호</button>
            </div>
-           <textarea id="c-content" style="width:100%;min-height:110px;border:none;padding:11px 13px;font-size:15px;resize:none;display:block" placeholder="컨설팅 내용을 입력하세요."></textarea>
+           <textarea id="c-content" style="width:100%;min-height:110px;border:none;padding:10px 12px;font-size:15px;resize:none;display:block" placeholder="컨설팅 내용을 입력하세요.">${isEdit?item.content||'':''}</textarea>
          </div>
        </div>
-       <div class="form-group"><label class="form-label">진단결과</label><input class="form-control" id="c-diag" placeholder="진단 결과"></div>
-       <div class="form-group"><label class="form-label">조치사항</label><input class="form-control" id="c-action" placeholder="조치사항"></div>`,
+       <div class="form-group"><label class="form-label">진단결과</label><input class="form-control" id="c-diag" value="${isEdit?item.diagnosis||'':''}" placeholder="진단 결과"></div>
+       <div class="form-group"><label class="form-label">조치사항</label><input class="form-control" id="c-action" value="${isEdit?item.action||'':''}" placeholder="조치사항"></div>`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
-       <button class="btn btn-primary" onclick="saveConsulting('${fk.id}','${fk.breed||''}',${wk})"><i class="fas fa-save"></i> 저장</button>`,true
+       <button class="btn btn-primary" onclick="${isEdit?`updateConsulting('${item.id}','${fk.id}','${fk.breed||''}',${wk})`:`saveConsulting('${fk.id}','${fk.breed||''}',${wk})`}"><i class="fas fa-save"></i> 저장</button>`,true
     );
+    // 수정3: 버튼 이벤트를 innerHTML 렌더 후 직접 바인딩
+    setTimeout(()=>{
+      const ta=document.getElementById('c-content');
+      document.getElementById('btn-list')?.addEventListener('click',()=>insertAtCursor(ta,'\n• '));
+      document.getElementById('btn-num')?.addEventListener('click',()=>insertAtCursor(ta,getNextNum(ta)));
+      document.getElementById('btn-sym')?.addEventListener('click',()=>insertAtCursor(ta,'【 】'));
+    },0);
   }
-  else if(m==='addPerf'){
-    const d=S.modalData;
-    mc.innerHTML=wrap('성적 입력','chart-line',
-      `<div class="notice"><i class="fas fa-info-circle"></i>${d.breed||''} · ${d.dayAge}일령 · ${d.weekAge}주령</div>
+  else if(m==='addPerf'||m==='editPerf'){
+    const isEdit=(m==='editPerf');
+    const p=isEdit?(DB.performance.find(x=>x.id===S.modalData.id)||{}):{};
+    const d=isEdit?{flockId:p.flockId,breed:p.breed||'',weekAge:p.weekAge||0,dayAge:p.dayAge||0}:S.modalData;
+    mc.innerHTML=wrap(isEdit?'성적 수정':'성적 입력','chart-line',
+      `<div class="notice"><i class="fas fa-info-circle"></i>${d.breed||''} · ${d.dayAge||0}일령 · ${d.weekAge||0}주령</div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="p-date" value="${today()}"></div>
-         <div class="form-group"><label class="form-label">체중 (g)</label><input type="number" class="form-control" id="p-weight" placeholder="1800"></div>
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="p-date" value="${isEdit?p.date:today()}"></div>
+         <div class="form-group"><label class="form-label">체중 (g)</label><input type="number" class="form-control" id="p-weight" value="${isEdit?p.weight||'':''}" placeholder="1800"></div>
        </div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">산란율 (%)</label><input type="number" step="0.1" class="form-control" id="p-lay" placeholder="92.5"></div>
-         <div class="form-group"><label class="form-label">오파란율 (%)</label><input type="number" step="0.1" class="form-control" id="p-dirty" placeholder="1.2"></div>
+         <div class="form-group"><label class="form-label">산란율 (%)</label><input type="number" step="0.1" class="form-control" id="p-lay" value="${isEdit?p.layRate||'':''}" placeholder="92.5"></div>
+         <div class="form-group"><label class="form-label">오파란율 (%)</label><input type="number" step="0.1" class="form-control" id="p-dirty" value="${isEdit?p.dirtyRate||'':''}" placeholder="1.2"></div>
        </div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">난중 (g)</label><input type="number" step="0.1" class="form-control" id="p-ew" placeholder="62.5"></div>
-         <div class="form-group"><label class="form-label">폐사 (수)</label><input type="number" class="form-control" id="p-mort" placeholder="0"></div>
+         <div class="form-group"><label class="form-label">난중 (g)</label><input type="number" step="0.1" class="form-control" id="p-ew" value="${isEdit?p.eggWeight||'':''}" placeholder="62.5"></div>
+         <div class="form-group"><label class="form-label">폐사 (수)</label><input type="number" class="form-control" id="p-mort" value="${isEdit?p.mortality||'':''}" placeholder="0"></div>
        </div>`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
-       <button class="btn btn-primary" onclick="savePerf()"><i class="fas fa-save"></i> 저장</button>`
+       <button class="btn btn-primary" onclick="${isEdit?`updatePerf('${p.id}')`:'savePerf()'}"><i class="fas fa-save"></i> 저장</button>`
     );
   }
   else if(m==='addTech'){
@@ -915,7 +1016,7 @@ function renderModal() {
          <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="t-date" value="${today()}"></div>
        </div>
        <div class="form-group"><label class="form-label">제목 *</label><input class="form-control" id="t-title" placeholder="게시물 제목"></div>
-       <div class="form-group"><label class="form-label">내용</label><textarea class="form-control" id="t-content" style="min-height:120px;resize:none" placeholder="내용을 입력하세요."></textarea></div>
+       <div class="form-group"><label class="form-label">내용</label><textarea class="form-control" id="t-content" style="min-height:110px;resize:none" placeholder="내용을 입력하세요."></textarea></div>
        <div class="form-group"><label class="form-label">키워드 (쉼표 구분)</label><input class="form-control" id="t-kw" placeholder="IB, 백신, 호흡기"></div>`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
        <button class="btn btn-primary" onclick="saveTech()"><i class="fas fa-save"></i> 저장</button>`,true
@@ -923,19 +1024,46 @@ function renderModal() {
   }
   else if(m==='initSheets'){
     mc.innerHTML=wrap('구글시트 초기화','database',
-      `<div class="notice"><i class="fas fa-info-circle"></i>최초 1회 실행. 구글시트에 탭(농장정보·계군정보·컨설팅내역·성적관리·기술정보)이 자동 생성됩니다.</div>`,
+      `<div class="notice"><i class="fas fa-info-circle"></i>최초 1회 실행. 구글시트에 탭 5개가 자동 생성됩니다.</div>`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
-       <button class="btn btn-gold" onclick="runInitSheets()"><i class="fas fa-play"></i> 초기화 실행</button>`
+       <button class="btn btn-gold" onclick="runInitSheets()"><i class="fas fa-play"></i> 실행</button>`
     );
   }
 }
 
 async function runInitSheets(){closeModal();showLoading('초기화 중...');try{await API.init();toast('초기화 완료','success');await loadAll();}catch(e){toast('실패: '+e.message,'error');hideLoading();}}
 
-// ── 백신 행 ──────────────────────────────────────────────────────
+// ── 수정3: 커서 위치에 텍스트 삽입 ──────────────────────────────
+function insertAtCursor(ta, text) {
+  if(!ta) return;
+  ta.focus();
+  const s=ta.selectionStart, e=ta.selectionEnd;
+  ta.value=ta.value.slice(0,s)+text+ta.value.slice(e);
+  const pos=s+text.length;
+  ta.selectionStart=ta.selectionEnd=pos;
+  ta.dispatchEvent(new Event('input'));
+}
+// 자동 번호 증가: 마지막 줄의 번호를 파악해서 다음 번호 반환
+function getNextNum(ta){
+  const lines=ta.value.split('\n');
+  let last=0;
+  for(let i=lines.length-1;i>=0;i--){
+    const m=lines[i].match(/^(\d+)\.\s/);
+    if(m){last=parseInt(m[1]);break;}
+  }
+  return `\n${last+1}. `;
+}
+// 기존 insertText 유지 (다른 곳에서 혹시 쓸 수 있으니)
+function insertText(id,text){
+  const el=document.getElementById(id);
+  if(!el) return;
+  insertAtCursor(el,text);
+}
+
+// ── 백신 ─────────────────────────────────────────────────────────
 function addVaxRow(){
-  const tb=document.getElementById('vaccine-tbody'); if(!tb) return;
-  const i=tb.rows.length; const tr=document.createElement('tr'); tr.id='vrow-'+i;
+  const tb=document.getElementById('vaccine-tbody');if(!tb) return;
+  const i=tb.rows.length;const tr=document.createElement('tr');tr.id='vrow-'+i;
   tr.innerHTML=`
     <td><input class="vax-day" placeholder="7"></td>
     <td><input class="vax-vac" placeholder="IB"></td>
@@ -958,13 +1086,6 @@ function collectVaxRows(){
 }
 
 // ── CRUD ─────────────────────────────────────────────────────────
-function insertText(id,text){
-  const el=document.getElementById(id); if(!el) return;
-  const s=el.selectionStart;
-  el.value=el.value.slice(0,s)+text+el.value.slice(s);
-  el.selectionStart=el.selectionEnd=s+text.length; el.focus();
-}
-
 async function saveFarm(){
   const name=(document.getElementById('m-name').value||'').trim();
   if(!name){toast('농장명을 입력하세요.','error');return;}
@@ -972,16 +1093,17 @@ async function saveFarm(){
     address:document.getElementById('m-addr').value.trim(),
     scale:document.getElementById('m-scale').value,
     antibiotic:document.getElementById('m-ab').value,memo:''};
-  closeModal(); await syncSave('farms',row,API.saveFarm,'농장이 추가되었습니다.');
+  closeModal();await syncSave('farms',row,API.saveFarm,'농장이 추가되었습니다.');
 }
 async function updateFarm(id){
   const farm=DB.farms.find(x=>x.id===id)||{};
-  const row={...farm,id,name:document.getElementById('e-name').value.trim(),
+  const row={...farm,id,
+    name:document.getElementById('e-name').value.trim(),
     owner:document.getElementById('e-owner').value.trim(),
     address:document.getElementById('e-addr').value.trim(),
     scale:document.getElementById('e-scale').value,
     antibiotic:document.getElementById('e-ab').value};
-  closeModal(); await syncSave('farms',row,API.saveFarm,'수정되었습니다.',true);
+  closeModal();await syncSave('farms',row,API.saveFarm,'수정되었습니다.',true);
 }
 async function saveFlock(){
   const dong=(document.getElementById('fk-dong').value||'').trim();
@@ -992,17 +1114,18 @@ async function saveFlock(){
     inDate:document.getElementById('fk-in').value,
     moveDate:document.getElementById('fk-move').value,
     vaccineNote:JSON.stringify(collectVaxRows())};
-  closeModal(); await syncSave('flocks',row,API.saveFlock,'계군이 추가되었습니다.');
+  closeModal();await syncSave('flocks',row,API.saveFlock,'계군이 추가되었습니다.');
 }
 async function updateFlock(id){
   const fk=DB.flocks.find(x=>x.id===id)||{};
-  const row={...fk,id,dong:document.getElementById('fk-dong').value.trim(),
+  const row={...fk,id,
+    dong:document.getElementById('fk-dong').value.trim(),
     count:document.getElementById('fk-count').value,
     breed:document.getElementById('fk-breed').value,
     inDate:document.getElementById('fk-in').value,
     moveDate:document.getElementById('fk-move').value,
     vaccineNote:JSON.stringify(collectVaxRows())};
-  closeModal(); await syncSave('flocks',row,API.saveFlock,'계군 정보가 수정되었습니다.',true);
+  closeModal();await syncSave('flocks',row,API.saveFlock,'계군 정보가 수정되었습니다.',true);
 }
 async function saveConsulting(flockId,breed,week){
   const row={id:uid(),flockId,breed,week,
@@ -1010,7 +1133,16 @@ async function saveConsulting(flockId,breed,week){
     content:document.getElementById('c-content').value,
     diagnosis:document.getElementById('c-diag').value,
     action:document.getElementById('c-action').value};
-  closeModal(); await syncSave('consulting',row,API.saveConsulting,'컨설팅이 등록되었습니다.');
+  closeModal();await syncSave('consulting',row,API.saveConsulting,'컨설팅이 등록되었습니다.');
+}
+async function updateConsulting(id,flockId,breed,week){
+  const old=DB.consulting.find(x=>x.id===id)||{};
+  const row={...old,id,flockId,breed,week,
+    date:document.getElementById('c-date').value,
+    content:document.getElementById('c-content').value,
+    diagnosis:document.getElementById('c-diag').value,
+    action:document.getElementById('c-action').value};
+  closeModal();await syncSave('consulting',row,API.saveConsulting,'컨설팅이 수정되었습니다.',true);
 }
 async function savePerf(){
   const fk=DB.flocks.find(x=>x.id===S.modalData.flockId)||{};
@@ -1023,7 +1155,18 @@ async function savePerf(){
     dirtyRate:document.getElementById('p-dirty').value,
     eggWeight:document.getElementById('p-ew').value,
     mortality:document.getElementById('p-mort').value};
-  closeModal(); await syncSave('performance',row,API.savePerformance,'성적이 저장되었습니다.');
+  closeModal();await syncSave('performance',row,API.savePerformance,'성적이 저장되었습니다.');
+}
+async function updatePerf(id){
+  const old=DB.performance.find(x=>x.id===id)||{};
+  const row={...old,id,
+    date:document.getElementById('p-date').value,
+    weight:document.getElementById('p-weight').value,
+    layRate:document.getElementById('p-lay').value,
+    dirtyRate:document.getElementById('p-dirty').value,
+    eggWeight:document.getElementById('p-ew').value,
+    mortality:document.getElementById('p-mort').value};
+  closeModal();await syncSave('performance',row,API.savePerformance,'성적이 수정되었습니다.',true);
 }
 async function saveTech(){
   const title=(document.getElementById('t-title').value||'').trim();
@@ -1032,12 +1175,14 @@ async function saveTech(){
     content:document.getElementById('t-content').value,
     keywords:document.getElementById('t-kw').value,
     date:document.getElementById('t-date').value};
-  closeModal(); await syncSave('tech',row,API.saveTech,'게시물이 등록되었습니다.');
+  closeModal();await syncSave('tech',row,API.saveTech,'게시물이 등록되었습니다.');
 }
 async function deleteItem(type,id){
   if(!confirm('삭제하시겠습니까?')) return;
-  const apiMap={consulting:API.deleteConsulting,performance:API.deletePerformance,tech:API.deleteTech,farms:API.deleteFarm,flocks:API.deleteFlock};
-  const col=type==='consulting'?'consulting':type==='performance'?'performance':type;
+  const apiMap={consulting:API.deleteConsulting,performance:API.deletePerformance,
+    tech:API.deleteTech,farms:API.deleteFarm,flocks:API.deleteFlock};
+  const colMap={consulting:'consulting',performance:'performance',tech:'tech',farms:'farms',flocks:'flocks'};
+  const col=colMap[type]||type;
   DB[col]=(DB[col]||[]).filter(x=>x.id!==id);
   if(S.showTechPost===id) S.showTechPost=null;
   render();
