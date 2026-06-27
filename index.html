@@ -108,7 +108,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 
 /* ── 농장 카드 ── */
 .farm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.farm-card{background:#fff;border-radius:12px;padding:12px;cursor:pointer;transition:.15s;border:2px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+.farm-card{background:#fff;border-radius:10px;padding:6px;cursor:pointer;transition:.15s;border:2px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,.07)}
 .farm-card:active{border-color:var(--navy);background:var(--gray-50)}
 /* 수정6: 농장카드 첫줄 이름+농장주, 둘째줄 시군+수수 */
 .fc-top{display:flex;align-items:baseline;gap:5px;margin-bottom:4px}
@@ -121,10 +121,10 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 /* ── 검색 ── */
 .search-wrap{display:flex;gap:7px;margin-bottom:10px}
 .search-input-wrap{position:relative;flex:1}
-.search-input-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:14px;pointer-events:none}
-.search-input{width:100%;height:44px;padding-left:36px;padding-right:12px;border-radius:22px;border:1.5px solid var(--gray-300);font-size:16px;background:#fff}
+.search-input-wrap i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:13px;pointer-events:none}
+.search-input{width:100%;height:37px;padding-left:36px;padding-right:12px;border-radius:19px;border:1.5px solid var(--gray-300);font-size:15px;background:#fff}
 .search-input:focus{outline:none;border-color:var(--navy)}
-.search-submit{height:44px;padding:0 16px;border-radius:22px;background:var(--navy);color:#fff;border:none;font-size:13px;font-weight:600;white-space:nowrap}
+.search-submit{height:37px;padding:0 14px;border-radius:19px;background:var(--navy);color:#fff;border:none;font-size:13px;font-weight:600;white-space:nowrap}
 
 /* ── 계군 카드 (수정4: KPI 박스형) ── */
 .flock-card{background:#fff;border-radius:12px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;cursor:pointer;transition:.15s}
@@ -603,7 +603,6 @@ function farmCard(f){
       <div class="fc-bottom">
         ${city?`<span class="fc-addr"><i class="fas fa-map-marker-alt" style="font-size:9px;color:var(--gray-400)"></i> ${city}</span>`:'' }
         <span class="fc-scale">${scale}</span>
-        ${certBadge(f.antibiotic)}
       </div>
     </div>`;
 }
@@ -684,10 +683,21 @@ function flockCard(fk){
   const age=calcWeek(fk.inDate);
   const cCnt=DB.consulting.filter(x=>x.flockId===fk.id).length;
   const pCnt=DB.performance.filter(x=>x.flockId===fk.id).length;
+
+  // 최근 7일 이내 등록된 컨설팅/성적이 있으면 NEW 표시
+  const recentDays=7;
+  const recentC=DB.consulting.filter(x=>x.flockId===fk.id&&daysSince(x.date)<=recentDays).length;
+  const recentP=DB.performance.filter(x=>x.flockId===fk.id&&daysSince(x.date)<=recentDays).length;
+  const isNew=(recentC+recentP)>0;
+
   return `
     <div class="flock-card" onclick="nav('flock',{farmId:'${S.farmId}',flockId:'${fk.id}',tab:'consulting'})">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 12px 2px">
-        <div style="font-size:14px;font-weight:700;color:var(--navy)">${fk.dong} <span style="font-size:12px;font-weight:400;color:var(--gray-600)">${fk.breed||''}</span></div>
+        <div style="font-size:14px;font-weight:700;color:var(--navy)">
+          ${fk.dong}
+          <span style="font-size:12px;font-weight:400;color:var(--gray-600)">${fk.breed||''}</span>
+          ${isNew?'<span style="font-size:11px;font-weight:700;color:#c5221f;margin-left:4px;letter-spacing:0.5px">NEW</span>':''}
+        </div>
         ${isAdmin?`<div style="display:flex;gap:4px" onclick="event.stopPropagation()">
           <button class="btn btn-ghost btn-sm btn-icon-only" onclick="openModal('editFlock',{flockId:'${fk.id}'})"><i class="fas fa-pencil-alt"></i></button>
           <button class="btn btn-danger btn-sm btn-icon-only" onclick="confirmDeleteFlock('${fk.id}')"><i class="fas fa-trash"></i></button>
@@ -959,13 +969,12 @@ function renderTech(c){
         :posts.map(p=>{
           const kws=String(p.keywords||'').split(',').filter(Boolean);
           return `
-            <div class="post-item" onclick="S.showTechPost='${p.id}';render()">
-              <span class="post-tag badge ${TAG_COLOR[p.tag]||'badge-gray'}">${p.tag||''}</span>
+            <div class="post-item" style="min-height:46px;align-items:center" onclick="S.showTechPost='${p.id}';render()">
+              <span class="post-tag badge ${TAG_COLOR[p.tag]||'badge-gray'}" style="margin-top:0">${p.tag||''}</span>
               <div style="flex:1;min-width:0">
-                <div class="post-title">${p.title||''}</div>
-                <div class="post-meta">${fmt(p.date)} ${kws.map(k=>`<span class="kw-tag">#${k.trim()}</span>`).join('')}</div>
+                <div class="post-title" style="margin-bottom:0">${p.title||''}</div>
               </div>
-              <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:12px;flex-shrink:0;margin-top:2px"></i>
+              <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:12px;flex-shrink:0"></i>
             </div>`;
         }).join('')}
     </div>`;
