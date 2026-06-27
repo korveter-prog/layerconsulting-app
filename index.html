@@ -581,6 +581,8 @@ function renderFarm(c){
   const farm=DB.farms.find(f=>f.id===S.farmId)||{};
   const flocks=DB.flocks.filter(f=>f.farmId===S.farmId);
   const cCount=DB.consulting.filter(c=>DB.flocks.find(f=>f.id===c.flockId&&f.farmId===S.farmId)).length;
+  const pCount=DB.performance.filter(p=>DB.flocks.find(f=>f.id===p.flockId&&f.farmId===S.farmId)).length;
+  const totalCount=flocks.reduce((sum,fk)=>sum+Number(fk.count||0),0);
 
   c.innerHTML=`
     <div class="page-top">
@@ -610,10 +612,11 @@ function renderFarm(c){
       </div>
     </div>
 
-    <div class="stat-row">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px">
       <div class="stat-mini"><div class="stat-val">${flocks.length}</div><div class="stat-lbl">계군 수</div></div>
       <div class="stat-mini"><div class="stat-val">${cCount}</div><div class="stat-lbl">컨설팅</div></div>
-      <div class="stat-mini"><div class="stat-val">${farm.scale?(Number(farm.scale)/10000).toFixed(1)+'만':'-'}</div><div class="stat-lbl">총 사육(수)</div></div>
+      <div class="stat-mini"><div class="stat-val">${pCount}</div><div class="stat-lbl">성적관리</div></div>
+      <div class="stat-mini"><div class="stat-val">${totalCount>0?(totalCount/10000).toFixed(1)+'만':'-'}</div><div class="stat-lbl">총 사육(수)</div></div>
     </div>
 
     <div class="card">
@@ -777,7 +780,7 @@ function renderConsultingContent(raw){
   if(!raw) return '';
   try {
     const d=JSON.parse(raw);
-    const LABELS={'온도_설정':'온도(설정)','온도_평균':'온도(평균)','점등':'점등','급이급수':'급이/급수','계분':'계분','닭':'닭','환기':'환기','부검':'부검'};
+    const LABELS={'온도_설정':'온도(설정)','온도_평균':'온도(평균)','점등':'점등','조도':'조도','급이급수':'급이/급수','계분':'계분','닭':'닭','진드기':'진드기','환기':'환기','부검':'부검','기타':'기타'};
     const rows=Object.entries(LABELS).map(([k,lbl])=>{
       const v=d[k];
       if(!v) return '';
@@ -1062,39 +1065,54 @@ function renderModal(){
            <table style="width:100%;border-collapse:collapse;font-size:14px" id="c-form-table">
              <tbody>
                <tr style="border-bottom:1px solid var(--gray-200)">
-                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:90px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">온도</td>
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">온도</td>
                  <td style="padding:4px 6px">
                    <div style="display:flex;gap:6px;align-items:center">
                      <span style="font-size:12px;color:var(--gray-500);white-space:nowrap">설정</span>
-                     <input class="c-field" data-key="온도_설정" style="flex:1;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="°C">
+                     <input class="c-field" data-key="온도_설정" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;box-sizing:border-box" placeholder="°C">
                      <span style="font-size:12px;color:var(--gray-500);white-space:nowrap">평균</span>
-                     <input class="c-field" data-key="온도_평균" style="flex:1;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="°C">
+                     <input class="c-field" data-key="온도_평균" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;box-sizing:border-box" placeholder="°C">
                    </div>
                  </td>
                </tr>
                <tr style="border-bottom:1px solid var(--gray-200)">
-                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">점등</td>
-                 <td style="padding:4px 6px"><input class="c-field" data-key="점등" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="점등 현황 입력"></td>
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">점등</td>
+                 <td style="padding:4px 6px">
+                   <div style="display:flex;gap:6px;align-items:center">
+                     <span style="font-size:12px;color:var(--gray-500);white-space:nowrap">점등</span>
+                     <input class="c-field" data-key="점등" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;box-sizing:border-box" placeholder="시간">
+                     <span style="font-size:12px;color:var(--gray-500);white-space:nowrap">조도</span>
+                     <input class="c-field" data-key="조도" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;box-sizing:border-box" placeholder="lux">
+                   </div>
+                 </td>
                </tr>
                <tr style="border-bottom:1px solid var(--gray-200)">
-                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">급이/급수</td>
-                 <td style="padding:4px 6px"><input class="c-field" data-key="급이급수" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="급이 및 급수 현황 입력"></td>
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">급이/급수</td>
+                 <td style="padding:4px 6px"><textarea class="c-field" data-key="급이급수" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:vertical;min-height:68px;box-sizing:border-box" placeholder="급이 및 급수 현황 입력"></textarea></td>
                </tr>
                <tr style="border-bottom:1px solid var(--gray-200)">
-                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">계분</td>
-                 <td style="padding:4px 6px"><input class="c-field" data-key="계분" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="계분 상태 입력"></td>
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">계분</td>
+                 <td style="padding:4px 6px"><input class="c-field" data-key="계분" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;box-sizing:border-box" placeholder="계분 상태 입력"></td>
                </tr>
                <tr style="border-bottom:1px solid var(--gray-200)">
-                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">닭</td>
-                 <td style="padding:4px 6px"><textarea class="c-field" data-key="닭" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:none;min-height:52px" placeholder="닭 상태 입력"></textarea></td>
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">닭</td>
+                 <td style="padding:4px 6px"><textarea class="c-field" data-key="닭" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:vertical;min-height:38px;box-sizing:border-box" placeholder="닭 상태 입력"></textarea></td>
                </tr>
                <tr style="border-bottom:1px solid var(--gray-200)">
-                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">환기</td>
-                 <td style="padding:4px 6px"><input class="c-field" data-key="환기" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="환기 현황 입력"></td>
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">진드기</td>
+                 <td style="padding:4px 6px"><input class="c-field" data-key="진드기" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;box-sizing:border-box" placeholder="진드기 현황 입력"></td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">환기</td>
+                 <td style="padding:4px 6px"><textarea class="c-field" data-key="환기" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:vertical;min-height:68px;box-sizing:border-box" placeholder="환기 현황 입력"></textarea></td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">부검</td>
+                 <td style="padding:4px 6px"><textarea class="c-field" data-key="부검" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:vertical;min-height:38px;box-sizing:border-box" placeholder="부검 소견 입력 (해당시)"></textarea></td>
                </tr>
                <tr>
-                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">부검</td>
-                 <td style="padding:4px 6px"><textarea class="c-field" data-key="부검" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:none;min-height:52px" placeholder="부검 소견 입력 (해당시)"></textarea></td>
+                 <td style="background:var(--gray-50);padding:7px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:76px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">기타</td>
+                 <td style="padding:4px 6px"><textarea class="c-field" data-key="기타" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:vertical;min-height:38px;box-sizing:border-box" placeholder="기타 사항 입력"></textarea></td>
                </tr>
              </tbody>
            </table>
