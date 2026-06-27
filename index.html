@@ -81,7 +81,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 /* ── 배지 ── */
-.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:20px;font-size:10px;font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:20px;font-size:12px;font-weight:600}
 .badge-navy{background:rgba(13,37,71,.1);color:var(--navy)}
 .badge-gold{background:rgba(201,168,76,.18);color:#7a5c1e}
 .badge-green{background:#e6f4ea;color:#137333}
@@ -134,7 +134,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 .flock-kpi-item{padding:10px 12px;border-right:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);text-align:center}
 .flock-kpi-item:nth-child(2n){border-right:none}
 .flock-kpi-val{font-size:16px;font-weight:700;color:var(--navy)}
-.flock-kpi-lbl{font-size:10px;color:var(--gray-500);margin-top:2px}
+.flock-kpi-lbl{font-size:12px;color:var(--gray-500);margin-top:2px}
 .flock-card-foot{padding:8px 14px;display:flex;gap:6px;border-top:1px solid var(--gray-100)}
 
 /* ── 컨설팅 카드 ── */
@@ -146,14 +146,14 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 .c-card-content{font-size:14px;line-height:1.7;white-space:pre-wrap;color:var(--text)}
 .c-card-foot{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px 12px 8px}
 .c-box{border-radius:8px;padding:8px 10px}
-.c-box-label{font-size:10px;font-weight:600;margin-bottom:2px}
+.c-box-label{font-size:12px;font-weight:600;margin-bottom:2px}
 .c-box-val{font-size:13px}
 
 /* ── 통계 미니 ── */
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
 .stat-mini{background:var(--gray-50);border-radius:10px;padding:7px 6px;text-align:center}
 .stat-val{font-size:18px;font-weight:700;color:var(--navy)}
-.stat-lbl{font-size:10px;color:var(--gray-500);margin-top:2px}
+.stat-lbl{font-size:12px;color:var(--gray-500);margin-top:2px}
 
 /* ── 농장 정보 리스트 ── */
 .info-list{display:flex;flex-direction:column}
@@ -165,17 +165,17 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 /* ── 계군 상단 KPI ── */
 .flock-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
 .flock-info-cell{background:#fff;border-radius:var(--radius);border:1px solid var(--gray-200);padding:7px 12px;display:flex;flex-direction:column;gap:2px}
-.flock-info-label{font-size:10px;color:var(--gray-500);font-weight:500}
+.flock-info-label{font-size:12px;color:var(--gray-500);font-weight:500}
 .flock-info-value{font-size:14px;font-weight:700;color:var(--navy)}
 
 /* ── 게시물 ── */
 .post-item{padding:12px 14px;border-bottom:1px solid var(--gray-100);cursor:pointer;display:flex;align-items:flex-start;gap:9px;min-height:60px}
 .post-item:active{background:var(--gray-50)}
 .post-item:last-child{border-bottom:none}
-.post-tag{padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.post-tag{padding:2px 7px;border-radius:5px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:1px}
 .post-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;line-height:1.4}
 .post-meta{font-size:11px;color:var(--gray-500);display:flex;flex-wrap:wrap;gap:3px;align-items:center}
-.kw-tag{background:var(--gray-100);color:var(--gray-600);padding:1px 5px;border-radius:4px;font-size:10px}
+.kw-tag{background:var(--gray-100);color:var(--gray-600);padding:1px 5px;border-radius:4px;font-size:12px}
 
 /* ── 모달 (하단 슬라이드업) ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;flex-direction:column;justify-content:flex-end}
@@ -238,7 +238,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 
 /* ── 데스크탑 보완 ── */
 @media(min-width:600px){
-  .page{padding:24px 32px 88px}
+  .page{padding:24px 45px 88px}
   .farm-grid{grid-template-columns:repeat(3,1fr)}
   .flock-kpi{grid-template-columns:repeat(3,1fr)}
   .flock-kpi-item:nth-child(2n){border-right:1px solid var(--gray-100)}
@@ -248,7 +248,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
   .modal{border-radius:16px;max-width:540px;max-height:88vh;animation:fadeIn .2s ease}
   .modal-handle{display:none}
   .page-top h1{font-size:21px}
-  .fab-area{bottom:24px;right:20px}
+  .fab-area{bottom:24px;right:max(20px,calc((100vw - 960px)/2 + 20px))}
 }
 @media(min-width:900px){
   .farm-grid{grid-template-columns:repeat(5,1fr)}
@@ -357,7 +357,7 @@ const fmt = d => {
   } catch(e) { return String(d); }
 };
 const daysSince = ds => Math.max(0,Math.floor((Date.now()-new Date(ds))/86400000));
-const calcWeek  = ds => Math.floor(daysSince(ds)/7);
+const calcWeek  = ds => Math.floor(daysSince(ds)/7) + 1;
 const numFmt    = n  => Number(n||0).toLocaleString();
 
 // 수정6: 주소에서 시군 단위 추출
@@ -607,7 +607,7 @@ function renderFarm(c){
     <div class="stat-row">
       <div class="stat-mini"><div class="stat-val">${flocks.length}</div><div class="stat-lbl">계군 수</div></div>
       <div class="stat-mini"><div class="stat-val">${cCount}</div><div class="stat-lbl">컨설팅</div></div>
-      <div class="stat-mini"><div class="stat-val">${farm.scale?(Number(farm.scale)/10000).toFixed(1)+'만':'-'}</div><div class="stat-lbl">총 사육(수)</div></div>
+      <div class="stat-mini"><div class="stat-val">${farm.scale?(Math.round(Number(farm.scale)/1000)/10).toFixed(1)+'만':'-'}</div><div class="stat-lbl">총 사육(수)</div></div>
     </div>
 
     <div class="card">
@@ -676,19 +676,30 @@ function confirmDeleteFlock(id){
 }
 
 async function saveFarmMemo(farmId){
-  const farm=DB.farms.find(x=>x.id===farmId)||{};
+  const farmOrig=DB.farms.find(x=>x.id===farmId)||{};
   const memo=document.getElementById('farm-memo-'+farmId)?.value||'';
-  // 로컬 캐시 즉시 반영 (render 전에)
+  // GAS에 전송할 row: id,name,owner,address,scale,antibiotic,memo 순서 명시
+  const row={
+    id:       farmOrig.id,
+    name:     farmOrig.name||'',
+    owner:    farmOrig.owner||'',
+    address:  farmOrig.address||'',
+    scale:    farmOrig.scale||'',
+    antibiotic: farmOrig.antibiotic||'일반',
+    memo:     memo,
+  };
+  // 로컬 캐시 즉시 반영
   const idx=DB.farms.findIndex(x=>x.id===farmId);
-  if(idx>=0) DB.farms[idx]={...farm,memo};
-  // GAS 저장 (render 없이 직접)
+  if(idx>=0) DB.farms[idx]={...farmOrig,memo};
   if(!isConfigured){toast('⚠ GAS URL 미설정','info');return;}
   showLoading('메모 저장 중...');
   try{
-    await API.saveFarm({...farm,memo});
+    const result=await API.saveFarm(row);
     toast('메모가 저장되었습니다.','success');
   }catch(e){
     toast('저장 실패: '+e.message,'error');
+    // 실패 시 로컬 캐시 롤백
+    if(idx>=0) DB.farms[idx]=farmOrig;
   }finally{hideLoading();}
 }
 
