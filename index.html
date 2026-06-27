@@ -93,7 +93,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 
 /* ── 테이블 ── */
 .table{width:100%;border-collapse:collapse}
-.table th{background:var(--navy);color:#fff;padding:8px 8px;font-size:11px;font-weight:600;text-align:center;white-space:nowrap}
+.table th{background:var(--navy);color:#fff;padding:8px 8px;font-size:13px;font-weight:600;text-align:center;white-space:nowrap}
 .table td{padding:8px 7px;border-bottom:1px solid var(--gray-100);font-size:12px;text-align:center}
 .table tr:last-child td{border-bottom:none}
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -110,10 +110,10 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 /* 수정6: 농장카드 첫줄 이름+농장주, 둘째줄 시군+수수 */
 .fc-top{display:flex;align-items:baseline;gap:5px;margin-bottom:4px}
 .fc-name{font-size:14px;font-weight:700;color:var(--navy)}
-.fc-owner{font-size:11px;color:var(--gray-500)}
+.fc-owner{font-size:13px;color:var(--gray-500)}
 .fc-bottom{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.fc-addr{font-size:11px;color:var(--gray-600)}
-.fc-scale{font-size:11px;color:var(--navy);font-weight:600}
+.fc-addr{font-size:13px;color:var(--gray-600)}
+.fc-scale{font-size:13px;color:var(--navy);font-weight:600}
 
 /* ── 검색 ── */
 .search-wrap{display:flex;gap:7px;margin-bottom:10px}
@@ -128,7 +128,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 .flock-card:active{background:var(--gray-50)}
 .flock-card-head{background:var(--navy);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
 .flock-card-title{font-size:15px;font-weight:700}
-.flock-card-breed{font-size:11px;opacity:.8}
+.flock-card-breed{font-size:13px;opacity:.8}
 /* KPI 박스 그리드: 모바일 2열, 웹 5열 */
 .flock-kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
 .flock-kpi-item{padding:10px 12px;border-right:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);text-align:center}
@@ -174,7 +174,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 .post-item:last-child{border-bottom:none}
 .post-tag{padding:2px 7px;border-radius:5px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:1px}
 .post-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;line-height:1.4}
-.post-meta{font-size:11px;color:var(--gray-500);display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.post-meta{font-size:13px;color:var(--gray-500);display:flex;flex-wrap:wrap;gap:3px;align-items:center}
 .kw-tag{background:var(--gray-100);color:var(--gray-600);padding:1px 5px;border-radius:4px;font-size:12px}
 
 /* ── 모달 (하단 슬라이드업) ── */
@@ -192,7 +192,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 
 /* ── 백신 테이블 ── */
 .vax-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:5px}
-.vax-table th{background:var(--navy);color:#fff;padding:7px 5px;font-size:11px;text-align:center}
+.vax-table th{background:var(--navy);color:#fff;padding:7px 5px;font-size:13px;text-align:center}
 .vax-table td{border:1px solid var(--gray-200);padding:1px}
 .vax-table input{width:100%;border:none;padding:7px 7px;font-size:14px;background:transparent;min-height:34px}
 .vax-table input:focus{background:#eff6ff;outline:none}
@@ -265,7 +265,8 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
   <div class="header">
     <div class="header-inner">
       <div class="header-title" onclick="nav('main')"><i class="fas fa-egg"></i>산란계 솔루션</div>
-      <div id="breadcrumb-area" class="breadcrumb"></div>
+      <div id="breadcrumb-area" class="breadcrumb" style="flex:1;margin:0 12px"></div>
+      <div id="header-auth"></div>
     </div>
   </div>
   <div class="page fade-in" id="main-content"></div>
@@ -420,6 +421,16 @@ async function loadAll(){
   }catch(err){toast('로드 실패: '+err.message,'error');}
   finally{hideLoading();render();}
 }
+// 페이지 이동 시 조용히 갱신 (로딩 오버레이 없음)
+async function loadAllSilent(){
+  if(!isConfigured) return;
+  try{
+    const[a,b,c,d,e]=await Promise.all([API.getFarms(),API.getFlocks(),API.getConsulting(),API.getPerformance(),API.getTech()]);
+    DB.farms=a.data||[];DB.flocks=b.data||[];DB.consulting=c.data||[];
+    DB.performance=d.data||[];DB.tech=e.data||[];
+    render(); // 갱신 후 화면 재렌더
+  }catch(err){} // 실패 시 무시 (이미 캐시 데이터 표시 중)
+}
 
 // ── FAB 영역 ─────────────────────────────────────────────────────
 function setFabs(fabs){
@@ -439,6 +450,8 @@ function nav(page,extra={},pushHist=true){
     history.pushState(state,'','#'+page+(S.farmId?'/'+S.farmId:'')+(S.flockId?'/'+S.flockId:''));
   }
   render();window.scrollTo(0,0);
+  // 페이지 이동 시 최신 데이터 백그라운드 갱신
+  if(isConfigured) loadAllSilent();
 }
 
 // 브라우저 뒤로가기/앞으로가기 처리
@@ -454,11 +467,22 @@ function render(){
   const c=document.getElementById('main-content');
   c.className='page fade-in';
   updateBreadcrumb();
+  updateHeaderAuth();
+  removeFab();
   if(S.page==='main')  renderMain(c);
   else if(S.page==='farm')  renderFarm(c);
   else if(S.page==='flock') renderFlock(c);
   else if(S.page==='tech')  renderTech(c);
+  else if(S.page==='disease') renderDisease(c);
   renderModal();
+}
+
+function updateHeaderAuth(){
+  const el=document.getElementById('header-auth');
+  if(!el) return;
+  el.innerHTML=isAdmin
+    ?`<button class="btn btn-sm" style="background:#137333;color:#fff;font-size:13px;padding:6px 12px;min-height:34px" onclick="adminLogout()"><i class="fas fa-lock-open"></i> 관리자</button>`
+    :`<button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.4);font-size:13px;padding:6px 12px;min-height:34px" onclick="openModal('adminLogin')"><i class="fas fa-lock"></i> 로그인</button>`;
 }
 
 function updateBreadcrumb(){
@@ -466,6 +490,7 @@ function updateBreadcrumb(){
   if(S.page==='main'){el.innerHTML='';return;}
   let html=`<span onclick="nav('main')"><i class="fas fa-home"></i></span><span class="sep">›</span>`;
   if(S.page==='tech') html+=`<span class="current">기술정보</span>`;
+  else if(S.page==='disease') html+=`<span class="current">질병통계</span>`;
   else if(S.page==='farm'){
     const f=DB.farms.find(x=>x.id===S.farmId);
     html+=`<span class="current">${f?f.name:''}</span>`;
@@ -507,9 +532,8 @@ function renderMain(c){
       <div style="display:flex;gap:5px;align-items:center">
         <button class="btn btn-ghost btn-sm" onclick="loadAll()"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-secondary btn-sm" onclick="nav('tech')"><i class="fas fa-book-open"></i> 기술정보</button>
-        ${isAdmin
-          ?`<button class="btn btn-sm" style="background:#137333;color:#fff" onclick="adminLogout()"><i class="fas fa-lock-open"></i> 관리자</button>`
-          :`<button class="btn btn-ghost btn-sm" onclick="openModal('adminLogin')"><i class="fas fa-lock"></i> 로그인</button>`}
+        <button class="btn btn-secondary btn-sm" onclick="nav('disease')"><i class="fas fa-chart-pie"></i> 질병통계</button>
+
       </div>
     </div>
 
@@ -547,7 +571,7 @@ function renderMain(c){
               style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;border:1px solid var(--gray-200);margin-bottom:7px;cursor:pointer">
               <div style="flex:1;min-width:0">
                 <div style="font-weight:600;font-size:13px;color:var(--navy)">${f.name} <span style="font-weight:400;color:var(--gray-500)">${f.owner||''}</span></div>
-                <div style="font-size:11px;color:var(--gray-500);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.address||''}</div>
+                <div style="font-size:13px;color:var(--gray-500);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.address||''}</div>
               </div>
               <i class="fas fa-chevron-right" style="color:var(--gray-300);font-size:12px;flex-shrink:0"></i>
             </div>`).join('')}
@@ -621,7 +645,7 @@ function renderFarm(c){
 
     <div class="card">
       <div class="card-body" style="padding:11px 14px">
-        <div style="font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:6px"><i class="fas fa-sticky-note" style="margin-right:3px;color:var(--gold)"></i>농장 메모</div>
+        <div style="font-size:13px;font-weight:600;color:var(--gray-600);margin-bottom:6px"><i class="fas fa-sticky-note" style="margin-right:3px;color:var(--gold)"></i>농장 메모</div>
         <textarea id="farm-memo-${farm.id}" class="form-control" rows="3"
           placeholder="농장 관련 메모를 입력하세요."
           style="font-size:14px;resize:none">${farm.memo||''}</textarea>
@@ -665,7 +689,7 @@ function flockCard(fk){
         <span><b style="color:var(--navy)">${age}주령</b></span>
         <span>${numFmt(fk.count||0)}수</span>
       </div>
-      <div style="display:flex;gap:14px;padding:1px 12px 5px;font-size:11px;color:var(--gray-500)">
+      <div style="display:flex;gap:14px;padding:1px 12px 5px;font-size:13px;color:var(--gray-500)">
         <span>컨설팅 <b style="color:var(--navy)">${cCnt}</b>건</span>
         <span>성적 <b style="color:var(--navy)">${pCnt}</b>건</span>
       </div>
@@ -847,7 +871,7 @@ function renderPerfTab(fk,list){
               ?`<tr><td colspan="8" style="padding:22px;color:var(--gray-400)">데이터 없음</td></tr>`
               :sorted.map(p=>`
                 <tr>
-                  <td style="white-space:nowrap;font-size:11px">${fmt(p.date)}</td>
+                  <td style="white-space:nowrap;font-size:13px">${fmt(p.date)}</td>
                   <td>${calcWeekAt(fk.inDate, p.date)}</td>
                   <td>${p.weight||'-'}</td>
                   <td style="color:${Number(p.layRate)>=90?'#137333':'inherit'};font-weight:600">${p.layRate||'-'}</td>
@@ -856,8 +880,8 @@ function renderPerfTab(fk,list){
                   <td style="color:${Number(p.mortality)>5?'#c5221f':'inherit'}">${p.mortality||0}</td>
                   <td>
                     ${isAdmin?`<div style="display:flex;gap:4px;justify-content:center">
-                      <button class="btn btn-ghost btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="openModal('editPerf',{id:'${p.id}'})"><i class="fas fa-pencil-alt" style="font-size:11px"></i></button>
-                      <button class="btn btn-danger btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="deleteItem('performance','${p.id}')"><i class="fas fa-trash" style="font-size:11px"></i></button>
+                      <button class="btn btn-ghost btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="openModal('editPerf',{id:'${p.id}'})"><i class="fas fa-pencil-alt" style="font-size:13px"></i></button>
+                      <button class="btn btn-danger btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="deleteItem('performance','${p.id}')"><i class="fas fa-trash" style="font-size:13px"></i></button>
                     </div>`:''}
                   </td>
                 </tr>`).join('')}
@@ -887,7 +911,7 @@ function renderTech(c){
         <div class="card-body">
           <div style="display:flex;gap:7px;align-items:center;margin-bottom:10px">
             <span class="badge ${TAG_COLOR[post.tag]||'badge-gray'} post-tag">${post.tag||''}</span>
-            <span style="font-size:11px;color:var(--gray-500)">${fmt(post.date)}</span>
+            <span style="font-size:13px;color:var(--gray-500)">${fmt(post.date)}</span>
           </div>
           <p style="font-size:14px;line-height:1.8;white-space:pre-wrap;margin-bottom:14px">${post.content||''}</p>
           <div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px">
@@ -943,6 +967,121 @@ function renderTech(c){
   setFabs(techFabs);
 }
 
+// ── 질병통계 페이지 ──────────────────────────────────────────────
+function renderDisease(c){
+  // 모든 컨설팅에서 진단결과 수집
+  const allDiag=DB.consulting
+    .filter(x=>x.diagnosis&&String(x.diagnosis).trim())
+    .map(x=>({diag:String(x.diagnosis).trim(), date:String(x.date||'')}));
+
+  // ── 전체 진단 건수 Top5 ──────────────────────────────────────
+  const diagCount={};
+  allDiag.forEach(({diag})=>{
+    diagCount[diag]=(diagCount[diag]||0)+1;
+  });
+  const top5=Object.entries(diagCount)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,5);
+  const total=allDiag.length;
+
+  // ── 월별 Top3 ───────────────────────────────────────────────
+  const byMonth={};
+  allDiag.forEach(({diag,date})=>{
+    const m=date.slice(0,7); // YYYY-MM
+    if(!m||m==='undefi') return;
+    if(!byMonth[m]) byMonth[m]={};
+    byMonth[m][diag]=(byMonth[m][diag]||0)+1;
+  });
+  const monthRows=Object.entries(byMonth)
+    .sort((a,b)=>b[0].localeCompare(a[0])) // 최신월 우선
+    .slice(0,12) // 최근 12개월
+    .map(([month,counts])=>{
+      const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3);
+      return {month, top};
+    });
+
+  c.innerHTML=`
+    <div class="page-top">
+      <h1><i class="fas fa-chart-pie" style="color:var(--gold);margin-right:6px"></i>질병통계</h1>
+    </div>
+
+    ${allDiag.length===0?`<div class="empty"><i class="fas fa-stethoscope"></i><p>등록된 컨설팅 진단결과가 없습니다.</p></div>`:`
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-header">
+        <h2><i class="fas fa-ranking-star"></i> 전체 진단 건수 Top 5</h2>
+        <span class="badge badge-navy">총 ${total}건</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:44px">순위</th>
+              <th style="text-align:left;padding-left:14px">진단 항목</th>
+              <th style="width:70px">건수</th>
+              <th style="width:90px">비율</th>
+              <th style="width:160px;padding-right:14px">비율 바</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${top5.map(([diag,cnt],i)=>{
+              const pct=(cnt/total*100).toFixed(1);
+              const rankColors=['#C9A84C','#9aa0a6','#c87533','#5f6368','#9aa0a6'];
+              return `<tr>
+                <td style="font-weight:700;color:${rankColors[i]||'var(--gray-500)'}">${i+1}</td>
+                <td style="text-align:left;padding-left:14px;font-weight:${i===0?'600':'400'};color:${i===0?'var(--navy)':'inherit'}">${diag}</td>
+                <td style="font-weight:600;color:var(--navy)">${cnt}</td>
+                <td style="color:var(--gray-600)">${pct}%</td>
+                <td style="padding:8px 14px 8px 0">
+                  <div style="background:var(--gray-100);border-radius:4px;height:8px;overflow:hidden">
+                    <div style="background:${i===0?'var(--gold)':'var(--navy)'};width:${pct}%;height:100%;border-radius:4px;opacity:${1-i*0.15}"></div>
+                  </div>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-calendar-alt"></i> 월별 주요 진단 Top 3</h2>
+        <span class="badge badge-navy">최근 ${monthRows.length}개월</span>
+      </div>
+      <div class="card-body" style="padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table class="table" style="min-width:420px">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding-left:14px;width:90px">월</th>
+              <th>1위</th>
+              <th>2위</th>
+              <th>3위</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${monthRows.length===0
+              ?`<tr><td colspan="4" style="padding:24px;color:var(--gray-400)">데이터 없음</td></tr>`
+              :monthRows.map(({month,top})=>{
+                const cells=[0,1,2].map(i=>top[i]
+                  ?`<td><span style="font-size:13px;font-weight:${i===0?'600':'400'};color:${i===0?'var(--navy)':'var(--gray-700)'}">
+                      ${top[i][0]}
+                    </span><br><span style="font-size:12px;color:var(--gray-500)">${top[i][1]}건</span></td>`
+                  :`<td style="color:var(--gray-300)">-</td>`
+                ).join('');
+                return `<tr>
+                  <td style="text-align:left;padding-left:14px;font-weight:500;color:var(--navy);white-space:nowrap">${month.replace('-','년 ')}월</td>
+                  ${cells}
+                </tr>`;
+              }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`}`;
+
+  setFabs([{icon:'arrow-left',onclick:"nav('main')",cls:'fab-back'}]);
+}
+
 // ── 모달 ─────────────────────────────────────────────────────────
 function openModal(name,data={}){S.modal=name;S.modalData=data;renderModal();}
 function closeModal(){S.modal=null;S.modalData={};document.getElementById('modal-container').innerHTML='';}
@@ -969,7 +1108,7 @@ function renderModal(){
     .map(v=>`<option value="${v}" ${cur===v?'selected':''}>${v}</option>`).join('');
 
   // 수정7: 품종 목록 변경
-  const BREEDS=['Hy-Line','ISA','Lohmann','Tetra','토종닭','메추리'];
+  const BREEDS=['하이라인브라운','이사브라운','로만브라운','테트라','토종닭','메추리'];
   const breedOpts=(cur)=>BREEDS.map(b=>`<option ${cur===b?'selected':''}>${b}</option>`).join('');
 
   const vaxRows=(rows=[])=>{
