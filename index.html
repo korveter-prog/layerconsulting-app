@@ -436,10 +436,15 @@ async function loadAllSilent(){
 function setFabs(fabs){
   // fabs: [{icon, onclick, cls}]
   const area=document.getElementById('fab-area');
+  if(!area) return;
   area.innerHTML=fabs.map(f=>`
     <button class="fab ${f.cls||'fab-main'}" onclick="${f.onclick}">
       <i class="fas fa-${f.icon}"></i>
     </button>`).join('');
+}
+function removeFab(){
+  const area=document.getElementById('fab-area');
+  if(area) area.innerHTML='';
 }
 
 // ── 라우터 ───────────────────────────────────────────────────────
