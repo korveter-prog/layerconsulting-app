@@ -980,9 +980,15 @@ function renderTech(c){
 let diseaseYear = new Date().getFullYear();
 
 function renderDisease(c){
+  // 진단결과를 쉼표로 분리하여 개별 항목으로 처리
   const allDiag=DB.consulting
     .filter(x=>x.diagnosis&&String(x.diagnosis).trim())
-    .map(x=>({diag:String(x.diagnosis).trim(), date:String(x.date||'')}));
+    .flatMap(x=>
+      String(x.diagnosis).split(',')
+        .map(d=>d.trim())
+        .filter(d=>d)
+        .map(d=>({diag:d, date:String(x.date||'')}))
+    );
 
   // ── 전체 Top5 (연도 무관) ────────────────────────────────────
   const diagCount={};
