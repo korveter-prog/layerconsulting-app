@@ -321,6 +321,17 @@ let S={
   showTechPost:null,modal:null,modalData:{},
 };
 
+// ── 관리자 인증 ───────────────────────────────────────────────
+// 비밀번호는 아래에서 변경 가능
+const ADMIN_PASSWORD = 'seoulfeed1981';
+let isAdmin = false;
+
+function checkAdmin(){ return isAdmin; }
+function adminGuard(fn){
+  if(!isAdmin){ toast('관리자 로그인이 필요합니다.','error'); return false; }
+  return fn();
+}
+
 // ── 유틸 ─────────────────────────────────────────────────────────
 const today     = () => new Date().toISOString().split('T')[0];
 const uid       = () => 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
@@ -415,10 +426,24 @@ function setFabs(fabs){
 }
 
 // ── 라우터 ───────────────────────────────────────────────────────
-function nav(page,extra={}){
+function nav(page,extra={},pushHist=true){
   S={...S,page,modal:null,showTechPost:null,...extra};
+  if(pushHist){
+    const state={page,farmId:S.farmId,flockId:S.flockId,tab:S.tab,showTechPost:S.showTechPost};
+    history.pushState(state,'','#'+page+(S.farmId?'/'+S.farmId:'')+(S.flockId?'/'+S.flockId:''));
+  }
   render();window.scrollTo(0,0);
 }
+
+// 브라우저 뒤로가기/앞으로가기 처리
+window.addEventListener('popstate', e => {
+  if(e.state){
+    S={...S,...e.state,modal:null};
+    render();window.scrollTo(0,0);
+  } else {
+    nav('main',{},false);
+  }
+});
 function render(){
   const c=document.getElementById('main-content');
   c.className='page fade-in';
@@ -473,9 +498,12 @@ function renderMain(c){
         <div style="font-size:20px;font-weight:700;color:var(--navy)">산란계 솔루션</div>
         <div style="font-size:12px;color:var(--gray-500);margin-top:1px">컨설팅 통합 관리</div>
       </div>
-      <div style="display:flex;gap:5px">
+      <div style="display:flex;gap:5px;align-items:center">
         <button class="btn btn-ghost btn-sm" onclick="loadAll()"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-secondary btn-sm" onclick="nav('tech')"><i class="fas fa-book-open"></i> 기술정보</button>
+        ${isAdmin
+          ?`<button class="btn btn-sm" style="background:#137333;color:#fff" onclick="adminLogout()"><i class="fas fa-lock-open"></i> 관리자</button>`
+          :`<button class="btn btn-ghost btn-sm" onclick="openModal('adminLogin')"><i class="fas fa-lock"></i> 로그인</button>`}
       </div>
     </div>
 
@@ -521,7 +549,7 @@ function renderMain(c){
     </div>`;
 
   // 수정5: 메인은 뒤로가기 없음, 농장추가만
-  setFabs([{icon:'plus',onclick:"openModal('addFarm')",cls:'fab-gold'}]);
+  if(isAdmin) setFabs([{icon:'plus',onclick:"openModal('addFarm')",cls:'fab-gold'}]); else setFabs([]);
 }
 
 // 수정6: 농장카드 - 이름+농장주 / 시군+수수
@@ -555,12 +583,13 @@ function renderFarm(c){
         <div class="page-top-sub">${farm.owner||''}</div>
       </div>
       <div class="page-top-actions">
+        ${isAdmin?`
         <button class="btn btn-ghost btn-sm" onclick="openModal('editFarm',{farmId:'${farm.id}'})">
           <i class="fas fa-pencil-alt"></i> 수정
         </button>
         <button class="btn btn-danger btn-sm" onclick="confirmDeleteFarm('${farm.id}')">
           <i class="fas fa-trash"></i> 삭제
-        </button>
+        </button>`:''}
       </div>
     </div>
 
@@ -578,7 +607,7 @@ function renderFarm(c){
     <div class="stat-row">
       <div class="stat-mini"><div class="stat-val">${flocks.length}</div><div class="stat-lbl">계군 수</div></div>
       <div class="stat-mini"><div class="stat-val">${cCount}</div><div class="stat-lbl">컨설팅</div></div>
-      <div class="stat-mini"><div class="stat-val">${farm.scale?(Number(farm.scale)/10000).toFixed(0)+'만':'-'}</div><div class="stat-lbl">수용(수)</div></div>
+      <div class="stat-mini"><div class="stat-val">${farm.scale?(Number(farm.scale)/10000).toFixed(1)+'만':'-'}</div><div class="stat-lbl">총 사육(수)</div></div>
     </div>
 
     <div class="card">
@@ -604,10 +633,9 @@ function renderFarm(c){
     </div>`;
 
   // 수정5: 뒤로가기(메인) + 추가
-  setFabs([
-    {icon:'arrow-left',onclick:"nav('main')",cls:'fab-back'},
-    {icon:'plus',onclick:"openModal('addFlock')",cls:'fab-main'},
-  ]);
+  const farmFabs=[{icon:'arrow-left',onclick:"nav('main')",cls:'fab-back'}];
+  if(isAdmin) farmFabs.push({icon:'plus',onclick:"openModal('addFlock')",cls:'fab-main'});
+  setFabs(farmFabs);
 }
 
 // 수정1: 계군 카드 - 3줄 간결 레이아웃
@@ -619,10 +647,10 @@ function flockCard(fk){
     <div class="flock-card" onclick="nav('flock',{farmId:'${S.farmId}',flockId:'${fk.id}',tab:'consulting'})">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 12px 2px">
         <div style="font-size:14px;font-weight:700;color:var(--navy)">${fk.dong} <span style="font-size:12px;font-weight:400;color:var(--gray-600)">${fk.breed||''}</span></div>
-        <div style="display:flex;gap:4px" onclick="event.stopPropagation()">
+        ${isAdmin?`<div style="display:flex;gap:4px" onclick="event.stopPropagation()">
           <button class="btn btn-ghost btn-sm btn-icon-only" onclick="openModal('editFlock',{flockId:'${fk.id}'})"><i class="fas fa-pencil-alt"></i></button>
           <button class="btn btn-danger btn-sm btn-icon-only" onclick="confirmDeleteFlock('${fk.id}')"><i class="fas fa-trash"></i></button>
-        </div>
+        </div>`:''}
       </div>
       <div style="display:flex;gap:14px;padding:1px 12px;font-size:12px;color:var(--gray-700)">
         <span><b style="color:var(--navy)">${age}주령</b></span>
@@ -683,12 +711,13 @@ function renderFlock(c){
         </div>
       </div>
       <div class="page-top-actions">
+        ${isAdmin?`
         <button class="btn btn-ghost btn-sm" onclick="openModal('editFlock',{flockId:'${fk.id}'})">
           <i class="fas fa-pencil-alt"></i> 수정
         </button>
         <button class="btn btn-danger btn-sm" onclick="confirmDeleteFlock('${fk.id}')">
           <i class="fas fa-trash"></i> 삭제
-        </button>
+        </button>`:''}
       </div>
     </div>
 
@@ -713,16 +742,15 @@ function renderFlock(c){
     ${S.tab==='consulting'?renderConsultingTab(fk,list):renderPerfTab(fk,perfs)}`;
 
   // 수정5: 뒤로가기(농장) + 등록
+  const backFab={icon:'arrow-left',onclick:`nav('farm',{farmId:'${S.farmId}'})`,cls:'fab-back'};
   if(S.tab==='consulting'){
-    setFabs([
-      {icon:'arrow-left',onclick:`nav('farm',{farmId:'${S.farmId}'})`,cls:'fab-back'},
-      {icon:'plus',onclick:`openModal('addConsulting',{flockId:'${fk.id}'})`,cls:'fab-main'},
-    ]);
+    const ff=[backFab];
+    if(isAdmin) ff.push({icon:'plus',onclick:`openModal('addConsulting',{flockId:'${fk.id}'})`,cls:'fab-main'});
+    setFabs(ff);
   }else{
-    setFabs([
-      {icon:'arrow-left',onclick:`nav('farm',{farmId:'${S.farmId}'})`,cls:'fab-back'},
-      {icon:'plus',onclick:`openModal('addPerf',{flockId:'${fk.id}',breed:'${fk.breed||''}',weekAge:${Math.floor(da/7)},dayAge:${da}})`,cls:'fab-main'},
-    ]);
+    const ff=[backFab];
+    if(isAdmin) ff.push({icon:'plus',onclick:`openModal('addPerf',{flockId:'${fk.id}',breed:'${fk.breed||''}',weekAge:${Math.floor(da/7)},dayAge:${da}})`,cls:'fab-main'});
+    setFabs(ff);
   }
 }
 
@@ -736,12 +764,13 @@ function renderConsultingTab(fk,list){
         <div class="c-card-head">
           <div class="c-card-date"><i class="fas fa-calendar-day"></i> ${fmt(item.date)} · ${item.week||''}주령</div>
           <div class="c-card-acts">
+            ${isAdmin?`
             <button class="btn btn-ghost btn-sm btn-icon-only" onclick="openModal('editConsulting',{id:'${item.id}'})" title="수정">
               <i class="fas fa-pencil-alt"></i>
             </button>
             <button class="btn btn-danger btn-sm btn-icon-only" onclick="deleteItem('consulting','${item.id}')" title="삭제">
               <i class="fas fa-trash"></i>
-            </button>
+            </button>`:''}
           </div>
         </div>
         <div class="c-card-body">
@@ -785,10 +814,10 @@ function renderPerfTab(fk,list){
                   <td>${p.eggWeight||'-'}</td>
                   <td style="color:${Number(p.mortality)>5?'#c5221f':'inherit'}">${p.mortality||0}</td>
                   <td>
-                    <div style="display:flex;gap:4px;justify-content:center">
+                    ${isAdmin?`<div style="display:flex;gap:4px;justify-content:center">
                       <button class="btn btn-ghost btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="openModal('editPerf',{id:'${p.id}'})"><i class="fas fa-pencil-alt" style="font-size:11px"></i></button>
                       <button class="btn btn-danger btn-sm btn-icon-only" style="width:30px;height:30px;min-height:30px" onclick="deleteItem('performance','${p.id}')"><i class="fas fa-trash" style="font-size:11px"></i></button>
-                    </div>
+                    </div>`:''}
                   </td>
                 </tr>`).join('')}
           </tbody>
@@ -800,7 +829,8 @@ function renderPerfTab(fk,list){
 // ── 기술정보 페이지 ───────────────────────────────────────────────
 function renderTech(c){
   const q=S.techSearchActive?S.techSearch.toLowerCase():'';
-  const posts=!S.techSearchActive?DB.tech:DB.tech.filter(p=>
+  const allTech=[...DB.tech].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const posts=!S.techSearchActive?allTech:allTech.filter(p=>
     (p.title||'').toLowerCase().includes(q)||(p.tag||'').toLowerCase().includes(q)||(p.keywords||'').toLowerCase().includes(q)
   );
 
@@ -822,14 +852,14 @@ function renderTech(c){
           <div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px">
             ${kws.map(k=>`<span class="kw-tag">#${k.trim()}</span>`).join('')}
           </div>
-          <div style="display:flex;gap:8px;margin-top:4px">
+          ${isAdmin?`<div style="display:flex;gap:8px;margin-top:4px">
             <button class="btn btn-ghost btn-sm" style="flex:1" onclick="openModal('editTech',{id:'${post.id}'})">
               <i class="fas fa-pencil-alt"></i> 수정
             </button>
             <button class="btn btn-danger btn-sm" style="flex:1" onclick="deleteItem('tech','${post.id}')">
               <i class="fas fa-trash"></i> 삭제
             </button>
-          </div>
+          </div>`:''}
         </div>
       </div>`;
     setFabs([{icon:'arrow-left',onclick:"S.showTechPost=null;render()",cls:'fab-back'}]);
@@ -867,10 +897,9 @@ function renderTech(c){
         }).join('')}
     </div>`;
 
-  setFabs([
-    {icon:'arrow-left',onclick:"nav('main')",cls:'fab-back'},
-    {icon:'plus',onclick:"openModal('addTech')",cls:'fab-main'},
-  ]);
+  const techFabs=[{icon:'arrow-left',onclick:"nav('main')",cls:'fab-back'}];
+  if(isAdmin) techFabs.push({icon:'plus',onclick:"openModal('addTech')",cls:'fab-main'});
+  setFabs(techFabs);
 }
 
 // ── 모달 ─────────────────────────────────────────────────────────
@@ -1054,6 +1083,19 @@ function renderModal(){
        <button class="btn btn-primary" onclick="${isTEdit?`updateTech('${tp.id}')`:'saveTech()'}"><i class="fas fa-save"></i> 저장</button>`,true
     );
   }
+  else if(m==='adminLogin'){
+    mc.innerHTML=wrap('관리자 로그인','lock',
+      `<div class="notice" style="margin-bottom:12px"><i class="fas fa-info-circle"></i>관리자로 로그인하면 농장·계군·컨설팅·성적·기술정보의 추가·수정·삭제가 가능합니다.</div>
+       <div class="form-group">
+         <label class="form-label">비밀번호</label>
+         <input type="password" class="form-control" id="admin-pw" placeholder="관리자 비밀번호 입력"
+           onkeydown="if(event.key==='Enter')doAdminLogin()">
+       </div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
+       <button class="btn btn-primary" onclick="doAdminLogin()"><i class="fas fa-sign-in-alt"></i> 로그인</button>`
+    );
+    setTimeout(()=>document.getElementById('admin-pw')?.focus(),100);
+  }
   else if(m==='initSheets'){
     mc.innerHTML=wrap('구글시트 초기화','database',
       `<div class="notice"><i class="fas fa-info-circle"></i>최초 1회 실행. 구글시트에 탭 5개가 자동 생성됩니다.</div>`,
@@ -1063,6 +1105,27 @@ function renderModal(){
   }
 }
 
+function doAdminLogin(){
+  const pw=document.getElementById('admin-pw')?.value||'';
+  if(pw===ADMIN_PASSWORD){
+    isAdmin=true;
+    sessionStorage.setItem('isAdmin','1');
+    closeModal();
+    toast('관리자로 로그인했습니다.','success');
+    render();
+  } else {
+    toast('비밀번호가 올바르지 않습니다.','error');
+    document.getElementById('admin-pw').value='';
+    document.getElementById('admin-pw').focus();
+  }
+}
+function adminLogout(){
+  if(!confirm('관리자 로그아웃 하시겠습니까?')) return;
+  isAdmin=false;
+  sessionStorage.removeItem('isAdmin');
+  toast('로그아웃했습니다.','info');
+  render();
+}
 async function runInitSheets(){closeModal();showLoading('초기화 중...');try{await API.init();toast('초기화 완료','success');await loadAll();}catch(e){toast('실패: '+e.message,'error');hideLoading();}}
 
 // ── 수정3: 커서 위치에 텍스트 삽입 ──────────────────────────────
@@ -1249,6 +1312,10 @@ async function syncSave(collection,row,apiFn,successMsg,isUpdate=false){
 }
 
 // ── 시작 ─────────────────────────────────────────────────────────
+// 세션 로그인 상태 복원
+if(sessionStorage.getItem('isAdmin')==='1') isAdmin=true;
+// 초기 히스토리 상태 등록
+history.replaceState({page:'main',farmId:null,flockId:null,tab:'consulting',showTechPost:null},'','#main');
 render();
 if(isConfigured) loadAll();
 </script>
