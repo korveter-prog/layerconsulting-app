@@ -583,38 +583,27 @@ function renderFarm(c){
   ]);
 }
 
-// 수정4: 계군 KPI 카드
+// 수정1: 계군 카드 - 3줄 간결 레이아웃
 function flockCard(fk){
   const age=calcWeek(fk.inDate);
-  const da=daysSince(fk.inDate);
   const cCnt=DB.consulting.filter(x=>x.flockId===fk.id).length;
   const pCnt=DB.performance.filter(x=>x.flockId===fk.id).length;
   return `
     <div class="flock-card" onclick="nav('flock',{farmId:'${S.farmId}',flockId:'${fk.id}',tab:'consulting'})">
-      <div class="flock-card-head">
-        <div>
-          <div class="flock-card-title">${fk.dong}</div>
-          <div class="flock-card-breed">${fk.breed||''}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px 3px">
+        <div style="font-size:14px;font-weight:700;color:var(--navy)">${fk.dong} <span style="font-size:12px;font-weight:400;color:var(--gray-600)">${fk.breed||''}</span></div>
+        <div style="display:flex;gap:4px" onclick="event.stopPropagation()">
+          <button class="btn btn-ghost btn-sm btn-icon-only" onclick="openModal('editFlock',{flockId:'${fk.id}'})"><i class="fas fa-pencil-alt"></i></button>
+          <button class="btn btn-danger btn-sm btn-icon-only" onclick="confirmDeleteFlock('${fk.id}')"><i class="fas fa-trash"></i></button>
         </div>
-        <i class="fas fa-chevron-right" style="opacity:.6;font-size:13px"></i>
       </div>
-      <div class="flock-kpi">
-        <div class="flock-kpi-item"><div class="flock-kpi-val">${age}주</div><div class="flock-kpi-lbl">주령</div></div>
-        <div class="flock-kpi-item"><div class="flock-kpi-val">${da}일</div><div class="flock-kpi-lbl">일령</div></div>
-        <div class="flock-kpi-item"><div class="flock-kpi-val">${numFmt(fk.count||0)}</div><div class="flock-kpi-lbl">사육수수</div></div>
-        <div class="flock-kpi-item"><div class="flock-kpi-val">${cCnt}</div><div class="flock-kpi-lbl">컨설팅</div></div>
-        <div class="flock-kpi-item"><div class="flock-kpi-val">${pCnt}</div><div class="flock-kpi-lbl">성적기록</div></div>
+      <div style="display:flex;gap:14px;padding:2px 12px;font-size:12px;color:var(--gray-700)">
+        <span><b style="color:var(--navy)">${age}주령</b></span>
+        <span>${numFmt(fk.count||0)}수</span>
       </div>
-      <div class="flock-card-foot">
-        <span class="badge badge-blue" style="font-size:10px">입추 ${fmt(fk.inDate)}</span>
-        <span class="badge badge-gold" style="font-size:10px">이동 ${fmt(fk.moveDate)}</span>
-        <div style="flex:1"></div>
-        <button class="btn btn-ghost btn-sm btn-icon-only" onclick="event.stopPropagation();openModal('editFlock',{flockId:'${fk.id}'})">
-          <i class="fas fa-pencil-alt"></i>
-        </button>
-        <button class="btn btn-danger btn-sm btn-icon-only" onclick="event.stopPropagation();confirmDeleteFlock('${fk.id}')">
-          <i class="fas fa-trash"></i>
-        </button>
+      <div style="display:flex;gap:14px;padding:2px 12px 7px;font-size:11px;color:var(--gray-500)">
+        <span>컨설팅 <b style="color:var(--navy)">${cCnt}</b>건</span>
+        <span>성적 <b style="color:var(--navy)">${pCnt}</b>건</span>
       </div>
     </div>`;
 }
@@ -634,9 +623,18 @@ function confirmDeleteFlock(id){
 async function saveFarmMemo(farmId){
   const farm=DB.farms.find(x=>x.id===farmId)||{};
   const memo=document.getElementById('farm-memo-'+farmId)?.value||'';
-  // 수정9: memo 포함 전체 farm row를 GAS에 저장
-  const row={...farm,memo};
-  await syncSave('farms',row,API.saveFarm,'메모 저장 완료.',true);
+  // 로컬 캐시 즉시 반영 (render 전에)
+  const idx=DB.farms.findIndex(x=>x.id===farmId);
+  if(idx>=0) DB.farms[idx]={...farm,memo};
+  // GAS 저장 (render 없이 직접)
+  if(!isConfigured){toast('⚠ GAS URL 미설정','info');return;}
+  showLoading('메모 저장 중...');
+  try{
+    await API.saveFarm({...farm,memo});
+    toast('메모가 저장되었습니다.','success');
+  }catch(e){
+    toast('저장 실패: '+e.message,'error');
+  }finally{hideLoading();}
 }
 
 // ── 계군 페이지 ──────────────────────────────────────────────────
@@ -939,8 +937,8 @@ function renderModal(){
          <select class="form-control" id="fk-breed">${breedOpts(fk.breed||'')}</select>
        </div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${fk.inDate||today()}"></div>
-         <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move" value="${fk.moveDate||''}"></div>
+         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${fk.inDate||''}" placeholder="입추일"></div>
+         <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move" value="${fk.moveDate||''}" placeholder="중추이동일"></div>
        </div>
        ${vaxTable(vr)}`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
@@ -1069,11 +1067,11 @@ function addVaxRow(){
     <td><input class="vax-vac" placeholder="IB"></td>
     <td style="display:flex;align-items:center">
       <input class="vax-note" placeholder="비고" style="flex:1">
-      <button type="button" class="vax-del" onclick="this.closest('tr').remove()">✕</button>
+      <button type="button" class="vax-del" onclick="if(confirm('이 행을 삭제하시겠습니까?'))this.closest('tr').remove()">✕</button>
     </td>`;
   tb.appendChild(tr);
 }
-function removeVaxRow(i){const r=document.getElementById('vrow-'+i);if(r)r.remove();}
+function removeVaxRow(i){if(!confirm('이 행을 삭제하시겠습니까?'))return;const r=document.getElementById('vrow-'+i);if(r)r.remove();}
 function collectVaxRows(){
   const rows=[];
   document.querySelectorAll('#vaccine-tbody tr').forEach(tr=>{
