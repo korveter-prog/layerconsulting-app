@@ -594,11 +594,20 @@ function renderMain(c){
 function farmCard(f){
   const scale=f.scale?(Number(f.scale)/10000).toFixed(0)+'만수':'-';
   const city=extractCity(f.address);
+  // 해당 농장 계군 중 7일 이내 수정된 계군이 있으면 NEW 표시
+  const recentDays=7;
+  const farmFlocks=DB.flocks.filter(fk=>fk.farmId===f.id);
+  const farmIsNew=farmFlocks.some(fk=>{
+    const recentC=DB.consulting.filter(x=>x.flockId===fk.id&&daysSince(x.date)<=recentDays).length;
+    const recentP=DB.performance.filter(x=>x.flockId===fk.id&&daysSince(x.date)<=recentDays).length;
+    return (recentC+recentP)>0;
+  });
   return `
     <div class="farm-card" onclick="nav('farm',{farmId:'${f.id}'})">
       <div class="fc-top">
         <span class="fc-name">${f.name}</span>
         <span class="fc-owner">${f.owner||''}</span>
+        ${farmIsNew?'<span style="font-size:11px;font-weight:700;color:#c5221f;letter-spacing:0.5px">NEW</span>':''}
       </div>
       <div class="fc-bottom">
         ${city?`<span class="fc-addr"><i class="fas fa-map-marker-alt" style="font-size:9px;color:var(--gray-400)"></i> ${city}</span>`:'' }
