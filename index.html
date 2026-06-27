@@ -358,6 +358,12 @@ const fmt = d => {
 };
 const daysSince = ds => Math.max(0,Math.floor((Date.now()-new Date(ds))/86400000));
 const calcWeek  = ds => Math.floor(daysSince(ds)/7) + 1;
+// 특정 날짜 기준 주령 계산 (입력날짜 기준)
+const calcWeekAt = (inDate, targetDate) => {
+  if(!inDate||!targetDate) return '-';
+  const days = Math.max(0, Math.floor((new Date(targetDate)-new Date(inDate))/86400000));
+  return Math.floor(days/7) + 1;
+};
 const numFmt    = n  => Number(n||0).toLocaleString();
 
 // 수정6: 주소에서 시군 단위 추출
@@ -607,7 +613,7 @@ function renderFarm(c){
     <div class="stat-row">
       <div class="stat-mini"><div class="stat-val">${flocks.length}</div><div class="stat-lbl">계군 수</div></div>
       <div class="stat-mini"><div class="stat-val">${cCount}</div><div class="stat-lbl">컨설팅</div></div>
-      <div class="stat-mini"><div class="stat-val">${farm.scale?(Math.round(Number(farm.scale)/1000)/10).toFixed(1)+'만':'-'}</div><div class="stat-lbl">총 사육(수)</div></div>
+      <div class="stat-mini"><div class="stat-val">${farm.scale?(Number(farm.scale)/10000).toFixed(1)+'만':'-'}</div><div class="stat-lbl">총 사육(수)</div></div>
     </div>
 
     <div class="card">
@@ -709,6 +715,7 @@ function renderFlock(c){
   const farm=DB.farms.find(x=>x.id===S.farmId)||{};
   const age=calcWeek(fk.inDate||today());
   const da=daysSince(fk.inDate||today());
+  const wk2=age; // 오늘 기준 주령 (calcWeek, +1 포함)
   const list=DB.consulting.filter(x=>x.flockId===S.flockId);
   const perfs=DB.performance.filter(x=>x.flockId===S.flockId);
 
@@ -760,8 +767,28 @@ function renderFlock(c){
     setFabs(ff);
   }else{
     const ff=[backFab];
-    if(isAdmin) ff.push({icon:'plus',onclick:`openModal('addPerf',{flockId:'${fk.id}',breed:'${fk.breed||''}',weekAge:${Math.floor(da/7)},dayAge:${da}})`,cls:'fab-main'});
+    if(isAdmin) ff.push({icon:'plus',onclick:`openModal('addPerf',{flockId:'${fk.id}',breed:'${fk.breed||''}',weekAge:${wk2},dayAge:${da}})`,cls:'fab-main'});
     setFabs(ff);
+  }
+}
+
+// 컨설팅 내용 렌더링: JSON 서식이면 테이블, 구형 텍스트면 그대로
+function renderConsultingContent(raw){
+  if(!raw) return '';
+  try {
+    const d=JSON.parse(raw);
+    const LABELS={'온도_설정':'온도(설정)','온도_평균':'온도(평균)','점등':'점등','급이급수':'급이/급수','계분':'계분','닭':'닭','환기':'환기','부검':'부검'};
+    const rows=Object.entries(LABELS).map(([k,lbl])=>{
+      const v=d[k];
+      if(!v) return '';
+      return `<div style="display:flex;gap:0;border-bottom:1px solid var(--gray-100);font-size:13px">
+        <div style="min-width:72px;padding:5px 8px;background:var(--gray-50);font-weight:600;color:var(--navy);font-size:12px;flex-shrink:0">${lbl}</div>
+        <div style="padding:5px 8px;color:var(--text);white-space:pre-wrap;flex:1">${v}</div>
+      </div>`;
+    }).join('');
+    return rows ? `<div style="border:1px solid var(--gray-200);border-radius:6px;overflow:hidden">${rows}</div>` : '-';
+  } catch(e){
+    return `<span style="white-space:pre-wrap">${raw}</span>`;
   }
 }
 
@@ -773,7 +800,7 @@ function renderConsultingTab(fk,list){
     :sorted.map(item=>`
       <div class="c-card">
         <div class="c-card-head">
-          <div class="c-card-date"><i class="fas fa-calendar-day"></i> ${fmt(item.date)} · ${item.week||''}주령</div>
+          <div class="c-card-date"><i class="fas fa-calendar-day"></i> ${fmt(item.date)} · ${calcWeekAt(fk.inDate, item.date)}주령</div>
           <div class="c-card-acts">
             ${isAdmin?`
             <button class="btn btn-ghost btn-sm btn-icon-only" onclick="openModal('editConsulting',{id:'${item.id}'})" title="수정">
@@ -785,7 +812,7 @@ function renderConsultingTab(fk,list){
           </div>
         </div>
         <div class="c-card-body">
-          <div class="c-card-content">${item.content||''}</div>
+          <div class="c-card-content">${renderConsultingContent(item.content)}</div>
         </div>
         <div class="c-card-foot">
           <div class="c-box" style="background:var(--gray-50)">
@@ -802,7 +829,7 @@ function renderConsultingTab(fk,list){
 
 // 수정2: 성적 탭 - 연필(수정) + 휴지통(삭제)
 function renderPerfTab(fk,list){
-  const da=daysSince(fk.inDate||today()),wk=Math.floor(da/7);
+  const da=daysSince(fk.inDate||today()),wk=calcWeek(fk.inDate||today());
   const sorted=[...list].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   return `
     <div class="notice"><i class="fas fa-info-circle"></i>오늘 기준 · ${da}일령 · ${wk}주령</div>
@@ -818,7 +845,7 @@ function renderPerfTab(fk,list){
               :sorted.map(p=>`
                 <tr>
                   <td style="white-space:nowrap;font-size:11px">${fmt(p.date)}</td>
-                  <td>${p.weekAge||'-'}</td>
+                  <td>${calcWeekAt(fk.inDate, p.date)}</td>
                   <td>${p.weight||'-'}</td>
                   <td style="color:${Number(p.layRate)>=90?'#137333':'inherit'};font-weight:600">${p.layRate||'-'}</td>
                   <td>${p.dirtyRate||'-'}</td>
@@ -939,7 +966,7 @@ function renderModal(){
     .map(v=>`<option value="${v}" ${cur===v?'selected':''}>${v}</option>`).join('');
 
   // 수정7: 품종 목록 변경
-  const BREEDS=['Hy-Line Brown','ISA Brown','Lohmann Brown','Tetra','토종닭','메추리'];
+  const BREEDS=['Hy-Line','ISA','Lohmann','Tetra','토종닭','메추리'];
   const breedOpts=(cur)=>BREEDS.map(b=>`<option ${cur===b?'selected':''}>${b}</option>`).join('');
 
   const vaxRows=(rows=[])=>{
@@ -1030,27 +1057,74 @@ function renderModal(){
          <div class="form-group"><label class="form-label">주령</label><input class="form-control" value="${wk}주령" readonly style="background:var(--gray-50)"></div>
        </div>
        <div class="form-group">
-         <label class="form-label">내용</label>
+         <label class="form-label">점검 내용</label>
          <div style="border:1.5px solid var(--gray-300);border-radius:var(--radius);overflow:hidden">
-           <div class="c-toolbar" style="background:var(--gray-50);padding:5px 8px;border-bottom:1px solid var(--gray-200);display:flex;gap:5px">
-             <button type="button" id="btn-list">• 목록</button>
-             <button type="button" id="btn-num">1. 번호</button>
-             <button type="button" id="btn-sym">【】기호</button>
-           </div>
-           <textarea id="c-content" style="width:100%;min-height:110px;border:none;padding:10px 12px;font-size:15px;resize:none;display:block" placeholder="컨설팅 내용을 입력하세요.">${isEdit?item.content||'':''}</textarea>
+           <table style="width:100%;border-collapse:collapse;font-size:14px" id="c-form-table">
+             <tbody>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;width:90px;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">온도</td>
+                 <td style="padding:4px 6px">
+                   <div style="display:flex;gap:6px;align-items:center">
+                     <span style="font-size:12px;color:var(--gray-500);white-space:nowrap">설정</span>
+                     <input class="c-field" data-key="온도_설정" style="flex:1;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="°C">
+                     <span style="font-size:12px;color:var(--gray-500);white-space:nowrap">평균</span>
+                     <input class="c-field" data-key="온도_평균" style="flex:1;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="°C">
+                   </div>
+                 </td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">점등</td>
+                 <td style="padding:4px 6px"><input class="c-field" data-key="점등" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="점등 현황 입력"></td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">급이/급수</td>
+                 <td style="padding:4px 6px"><input class="c-field" data-key="급이급수" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="급이 및 급수 현황 입력"></td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">계분</td>
+                 <td style="padding:4px 6px"><input class="c-field" data-key="계분" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="계분 상태 입력"></td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">닭</td>
+                 <td style="padding:4px 6px"><textarea class="c-field" data-key="닭" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:none;min-height:52px" placeholder="닭 상태 입력"></textarea></td>
+               </tr>
+               <tr style="border-bottom:1px solid var(--gray-200)">
+                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">환기</td>
+                 <td style="padding:4px 6px"><input class="c-field" data-key="환기" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px" placeholder="환기 현황 입력"></td>
+               </tr>
+               <tr>
+                 <td style="background:var(--gray-50);padding:8px 10px;font-weight:600;color:var(--navy);white-space:nowrap;border-right:1px solid var(--gray-200);vertical-align:middle;font-size:13px">부검</td>
+                 <td style="padding:4px 6px"><textarea class="c-field" data-key="부검" style="width:100%;border:1px solid var(--gray-200);border-radius:6px;padding:6px 8px;font-size:14px;resize:none;min-height:52px" placeholder="부검 소견 입력 (해당시)"></textarea></td>
+               </tr>
+             </tbody>
+           </table>
          </div>
+         <input type="hidden" id="c-content">
        </div>
        <div class="form-group"><label class="form-label">진단결과</label><input class="form-control" id="c-diag" value="${isEdit?item.diagnosis||'':''}" placeholder="진단 결과"></div>
        <div class="form-group"><label class="form-label">조치사항</label><input class="form-control" id="c-action" value="${isEdit?item.action||'':''}" placeholder="조치사항"></div>`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
        <button class="btn btn-primary" onclick="${isEdit?`updateConsulting('${item.id}','${fk.id}','${fk.breed||''}',${wk})`:`saveConsulting('${fk.id}','${fk.breed||''}',${wk})`}"><i class="fas fa-save"></i> 저장</button>`,true
     );
-    // 수정3: 버튼 이벤트를 innerHTML 렌더 후 직접 바인딩
+    // 서식 필드에 기존 저장값 복원 (수정 모드)
     setTimeout(()=>{
-      const ta=document.getElementById('c-content');
-      document.getElementById('btn-list')?.addEventListener('click',()=>insertAtCursor(ta,'\n• '));
-      document.getElementById('btn-num')?.addEventListener('click',()=>insertAtCursor(ta,getNextNum(ta)));
-      document.getElementById('btn-sym')?.addEventListener('click',()=>insertAtCursor(ta,'【 】'));
+      if(isEdit && item.content){
+        try {
+          const parsed = JSON.parse(item.content);
+          document.querySelectorAll('.c-field').forEach(el=>{
+            const key=el.dataset.key;
+            if(key && parsed[key]!==undefined) el.value=parsed[key];
+          });
+        } catch(e) {
+          // 구형 텍스트 형식이면 닭 항목에 전체 내용 넣기
+          const el=document.querySelector('.c-field[data-key="닭"]');
+          if(el) el.value=item.content;
+        }
+      }
+      // 필드 변경 시 hidden input 갱신
+      document.querySelectorAll('.c-field').forEach(el=>{
+        el.addEventListener('input', syncContentField);
+      });
     },0);
   }
   else if(m==='addPerf'||m==='editPerf'){
@@ -1139,7 +1213,21 @@ function adminLogout(){
 }
 async function runInitSheets(){closeModal();showLoading('초기화 중...');try{await API.init();toast('초기화 완료','success');await loadAll();}catch(e){toast('실패: '+e.message,'error');hideLoading();}}
 
-// ── 수정3: 커서 위치에 텍스트 삽입 ──────────────────────────────
+// 서식 필드 → hidden input 동기화
+function syncContentField(){
+  const obj={};
+  document.querySelectorAll('.c-field').forEach(el=>{
+    if(el.dataset.key) obj[el.dataset.key]=el.value;
+  });
+  const h=document.getElementById('c-content');
+  if(h) h.value=JSON.stringify(obj);
+}
+function collectContent(){
+  syncContentField();
+  return document.getElementById('c-content')?.value||'';
+}
+
+// ── 커서 위치에 텍스트 삽입 ──────────────────────────────────────
 function insertAtCursor(ta, text) {
   if(!ta) return;
   ta.focus();
@@ -1236,7 +1324,7 @@ async function updateFlock(id){
 async function saveConsulting(flockId,breed,week){
   const row={id:uid(),flockId,breed,week,
     date:document.getElementById('c-date').value,
-    content:document.getElementById('c-content').value,
+    content:collectContent(),
     diagnosis:document.getElementById('c-diag').value,
     action:document.getElementById('c-action').value};
   closeModal();await syncSave('consulting',row,API.saveConsulting,'컨설팅이 등록되었습니다.');
@@ -1245,7 +1333,7 @@ async function updateConsulting(id,flockId,breed,week){
   const old=DB.consulting.find(x=>x.id===id)||{};
   const row={...old,id,flockId,breed,week,
     date:document.getElementById('c-date').value,
-    content:document.getElementById('c-content').value,
+    content:collectContent(),
     diagnosis:document.getElementById('c-diag').value,
     action:document.getElementById('c-action').value};
   closeModal();await syncSave('consulting',row,API.saveConsulting,'컨설팅이 수정되었습니다.',true);
