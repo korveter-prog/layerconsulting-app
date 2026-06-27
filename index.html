@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#0D2547">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -835,26 +838,26 @@ function renderConsultingTab(fk,list){
           <div class="c-card-date"><i class="fas fa-calendar-day"></i> ${fmt(item.date)} · ${calcWeekAt(fk.inDate, item.date)}주령</div>
           <div class="c-card-acts">
             ${isAdmin?`
-            <button class="btn btn-ghost btn-sm btn-icon-only" onclick="openModal('editConsulting',{id:'${item.id}'})" title="수정">
-              <i class="fas fa-pencil-alt"></i>
+            <button class="btn btn-ghost btn-sm btn-icon-only" style="width:28px;height:28px;min-height:28px" onclick="openModal('editConsulting',{id:'${item.id}'})" title="수정">
+              <i class="fas fa-pencil-alt" style="font-size:12px"></i>
             </button>
-            <button class="btn btn-danger btn-sm btn-icon-only" onclick="deleteItem('consulting','${item.id}')" title="삭제">
-              <i class="fas fa-trash"></i>
+            <button class="btn btn-danger btn-sm btn-icon-only" style="width:28px;height:28px;min-height:28px" onclick="deleteItem('consulting','${item.id}')" title="삭제">
+              <i class="fas fa-trash" style="font-size:12px"></i>
             </button>`:''}
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px 12px 0">
+          <div style="background:var(--gray-50);border-radius:6px;padding:5px 8px">
+            <div style="font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:2px">진단결과</div>
+            <div style="font-size:13px;color:var(--text)">${item.diagnosis||'-'}</div>
+          </div>
+          <div style="background:#fff8e6;border-radius:6px;padding:5px 8px">
+            <div style="font-size:12px;font-weight:600;color:#8a6f2e;margin-bottom:2px">조치사항</div>
+            <div style="font-size:13px;color:var(--text)">${item.action||'-'}</div>
           </div>
         </div>
         <div class="c-card-body">
           <div class="c-card-content">${renderConsultingContent(item.content)}</div>
-        </div>
-        <div class="c-card-foot">
-          <div class="c-box" style="background:var(--gray-50)">
-            <div class="c-box-label" style="color:var(--gray-500)">진단결과</div>
-            <div class="c-box-val">${item.diagnosis||'-'}</div>
-          </div>
-          <div class="c-box" style="background:#fff8e6">
-            <div class="c-box-label" style="color:#8a6f2e">조치사항</div>
-            <div class="c-box-val">${item.action||'-'}</div>
-          </div>
         </div>
       </div>`).join('');
 }
@@ -1204,13 +1207,13 @@ function renderModal(){
     mc.innerHTML=wrap(isEdit?'계군 수정':'계군 추가',isEdit?'pencil-alt':'plus',
       `<div class="form-row">
          <div class="form-group"><label class="form-label">동번호 *</label><input class="form-control" id="fk-dong" value="${fk.dong||''}" placeholder="예: 6동"></div>
-         <div class="form-group"><label class="form-label">사육수수</label><input type="number" class="form-control" id="fk-count" value="${fk.count||''}" placeholder="10000"></div>
+         <div class="form-group"><label class="form-label">사육수수</label><input type="text" inputmode="numeric" class="form-control" id="fk-count" value="${fk.count?Number(fk.count).toLocaleString():''}" placeholder="10,000" oninput="fmtCount(this)"></div>
        </div>
        <div class="form-group"><label class="form-label">품종</label>
          <select class="form-control" id="fk-breed">${breedOpts(fk.breed||'')}</select>
        </div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${fk.inDate||''}" placeholder="입추일"></div>
+         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${isEdit?(fk.inDate||today()):today()}" placeholder="입추일"></div>
          <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move" value="${fk.moveDate||''}" placeholder="중추이동일"></div>
        </div>
        ${vaxTable(vr)}`,
@@ -1416,6 +1419,12 @@ function collectContent(){
   return document.getElementById('c-content')?.value||'';
 }
 
+// 사육수수 3자리 쉼표 포매터
+function fmtCount(el){
+  const raw=el.value.replace(/[^0-9]/g,'');
+  el.value=raw?Number(raw).toLocaleString():'';
+}
+
 // ── 커서 위치에 텍스트 삽입 ──────────────────────────────────────
 function insertAtCursor(ta, text) {
   if(!ta) return;
@@ -1492,7 +1501,7 @@ async function saveFlock(){
   const dong=(document.getElementById('fk-dong').value||'').trim();
   if(!dong){toast('동번호를 입력하세요.','error');return;}
   const row={id:uid(),farmId:S.farmId,dong,
-    count:document.getElementById('fk-count').value,
+    count:document.getElementById('fk-count').value.replace(/,/g,''),
     breed:document.getElementById('fk-breed').value,
     inDate:document.getElementById('fk-in').value,
     moveDate:document.getElementById('fk-move').value,
@@ -1503,7 +1512,7 @@ async function updateFlock(id){
   const fk=DB.flocks.find(x=>x.id===id)||{};
   const row={...fk,id,
     dong:document.getElementById('fk-dong').value.trim(),
-    count:document.getElementById('fk-count').value,
+    count:document.getElementById('fk-count').value.replace(/,/g,''),
     breed:document.getElementById('fk-breed').value,
     inDate:document.getElementById('fk-in').value,
     moveDate:document.getElementById('fk-move').value,
