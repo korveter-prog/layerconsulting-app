@@ -777,9 +777,10 @@ function renderFlock(c){
     <div class="page-top">
       <div>
         <h1>${farm.name||''} · ${fk.dong||''}</h1>
-        <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
+        <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;align-items:center">
           <span class="badge badge-blue">${fk.breed||''}</span>
           <span class="badge badge-gold">${age}주령</span>
+          <span style="font-size:12px;color:var(--gray-500)">${da}일령</span>
         </div>
       </div>
       <div class="page-top-actions">
@@ -793,11 +794,11 @@ function renderFlock(c){
       </div>
     </div>
 
-    <div class="flock-info-grid">
+    <div class="flock-info-grid" style="grid-template-columns:1fr 1fr!important">
       <div class="flock-info-cell"><span class="flock-info-label">사육수수</span><span class="flock-info-value">${numFmt(fk.count||0)}수</span></div>
-      <div class="flock-info-cell"><span class="flock-info-label">현재 일령</span><span class="flock-info-value">${da}일</span></div>
       <div class="flock-info-cell"><span class="flock-info-label">입추일</span><span class="flock-info-value">${fmt(fk.inDate)}</span></div>
       <div class="flock-info-cell"><span class="flock-info-label">중추이동일</span><span class="flock-info-value">${fmt(fk.moveDate)}</span></div>
+      <div class="flock-info-cell"><span class="flock-info-label">환우개시일</span><span class="flock-info-value">${fmt(fk.moltDate)}</span></div>
     </div>
 
     <div class="tabs">
@@ -1240,6 +1241,7 @@ function renderModal(){
          <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${isEdit?(fk.inDate||today()):today()}" placeholder="입추일"></div>
          <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move" value="${fk.moveDate||''}" placeholder="중추이동일"></div>
        </div>
+       <div class="form-group"><label class="form-label">환우개시일</label><input type="date" class="form-control" id="fk-molt" value="${fk.moltDate||''}" placeholder="환우개시일"></div>
        ${vaxTable(vr)}`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
        <button class="btn btn-primary" onclick="${isEdit?`updateFlock('${fk.id}')`:'saveFlock()'}"><i class="fas fa-save"></i> 저장</button>`,true
@@ -1529,6 +1531,7 @@ async function saveFlock(){
     breed:document.getElementById('fk-breed').value,
     inDate:document.getElementById('fk-in').value,
     moveDate:document.getElementById('fk-move').value,
+    moltDate:document.getElementById('fk-molt').value,
     vaccineNote:JSON.stringify(collectVaxRows())};
   closeModal();await syncSave('flocks',row,API.saveFlock,'계군이 추가되었습니다.');
 }
@@ -1540,6 +1543,7 @@ async function updateFlock(id){
     breed:document.getElementById('fk-breed').value,
     inDate:document.getElementById('fk-in').value,
     moveDate:document.getElementById('fk-move').value,
+    moltDate:document.getElementById('fk-molt').value,
     vaccineNote:JSON.stringify(collectVaxRows())};
   closeModal();await syncSave('flocks',row,API.saveFlock,'계군 정보가 수정되었습니다.',true);
 }
