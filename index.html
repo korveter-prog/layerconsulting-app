@@ -313,6 +313,8 @@ const API = {
   getTech:          ()    => API.call('getTech'),
   saveTech:         (row) => API.call('saveTech',           {row}),
   deleteTech:       (id)  => API.call('deleteTech',         {id}),
+  backupSheet:      ()    => API.call('backupSheet'),
+  getBackups:       ()    => API.call('getBackups'),
 };
 
 let DB={farms:[],flocks:[],consulting:[],performance:[],tech:[]};
@@ -489,7 +491,10 @@ function updateHeaderAuth(){
   const el=document.getElementById('header-auth');
   if(!el) return;
   el.innerHTML=isAdmin
-    ?`<button class="btn btn-sm" style="background:#137333;color:#fff;font-size:13px;padding:6px 12px;min-height:34px" onclick="adminLogout()"><i class="fas fa-lock-open"></i> 관리자</button>`
+    ?`<div style="display:flex;gap:5px">
+        <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.4);font-size:13px;padding:6px 10px;min-height:34px" onclick="openModal('backup')" title="백업"><i class="fas fa-database"></i></button>
+        <button class="btn btn-sm" style="background:#137333;color:#fff;font-size:13px;padding:6px 12px;min-height:34px" onclick="adminLogout()"><i class="fas fa-lock-open"></i> 관리자</button>
+      </div>`
     :`<button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.4);font-size:13px;padding:6px 12px;min-height:34px" onclick="openModal('adminLogin')"><i class="fas fa-lock"></i> 로그인</button>`;
 }
 
@@ -1405,6 +1410,55 @@ function renderModal(){
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
        <button class="btn btn-gold" onclick="runInitSheets()"><i class="fas fa-play"></i> 실행</button>`
     );
+  }
+  else if(m==='backup'){
+    mc.innerHTML=wrap('구글시트 백업','database',
+      `<div class="notice"><i class="fas fa-info-circle"></i>현재 구글시트 전체를 복사해 백업 파일을 생성합니다. 최대 2개까지만 보관되며, 새 백업 생성 시 가장 오래된 파일이 자동 삭제됩니다.</div>
+       <div id="backup-list" style="margin-bottom:14px">
+         <div style="text-align:center;padding:16px;color:var(--gray-400);font-size:13px"><i class="fas fa-spinner fa-spin"></i> 백업 목록 불러오는 중...</div>
+       </div>`,
+      `<button class="btn btn-ghost" onclick="closeModal()">닫기</button>
+       <button class="btn btn-gold" onclick="runBackup()"><i class="fas fa-cloud-upload-alt"></i> 지금 백업</button>`
+    );
+    loadBackupList();
+  }
+}
+
+async function loadBackupList(){
+  const el=document.getElementById('backup-list');
+  if(!el) return;
+  try{
+    const res=await API.getBackups();
+    const list=res.data||[];
+    if(list.length===0){
+      el.innerHTML='<div style="text-align:center;padding:16px;color:var(--gray-400);font-size:13px">아직 생성된 백업이 없습니다.</div>';
+      return;
+    }
+    el.innerHTML=list.map(b=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:7px">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">${b.name}</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-top:2px">${b.createdAt}</div>
+        </div>
+        <a href="${b.url}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">
+          <i class="fas fa-external-link-alt"></i> 열기
+        </a>
+      </div>`).join('');
+  }catch(e){
+    el.innerHTML=`<div style="text-align:center;padding:16px;color:#c5221f;font-size:13px">목록 불러오기 실패: ${e.message}</div>`;
+  }
+}
+
+async function runBackup(){
+  showLoading('백업 생성 중...');
+  try{
+    const res=await API.backupSheet();
+    toast('백업이 생성되었습니다.','success');
+    await loadBackupList();
+  }catch(e){
+    toast('백업 실패: '+e.message,'error');
+  }finally{
+    hideLoading();
   }
 }
 
