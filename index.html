@@ -362,6 +362,20 @@ const fmt = d => {
     return s;
   } catch(e) { return String(d); }
 };
+// date input(type=date)용 YYYY-MM-DD 변환 (ISO 형식 대응)
+const dateInput = d => {
+  if(!d) return '';
+  const s = String(d);
+  // 이미 YYYY-MM-DD 형식이면 그대로
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  // ISO 8601 등은 Date로 파싱
+  const dt = new Date(s);
+  if(isNaN(dt)) return '';
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth()+1).padStart(2,'0');
+  const dd = String(dt.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+};
 const daysSince = ds => Math.max(0,Math.floor((Date.now()-new Date(ds))/86400000));
 const calcWeek  = ds => Math.floor(daysSince(ds)/7) + 1;
 // 특정 날짜 기준 주령 계산 (입력날짜 기준)
@@ -371,6 +385,18 @@ const calcWeekAt = (inDate, targetDate) => {
   return Math.floor(days/7) + 1;
 };
 const numFmt    = n  => Number(n||0).toLocaleString();
+
+// 동번호 정렬: 숫자→번호순, 영문→ABC순, 한글→가나다순
+function sortByDong(a, b){
+  const da=String(a.dong||'').trim(), db=String(b.dong||'').trim();
+  // 숫자 추출 (예: "1동" → 1, "10동" → 10)
+  const na=da.match(/^\d+/), nb=db.match(/^\d+/);
+  if(na && nb) return parseInt(na[0]) - parseInt(nb[0]); // 둘 다 숫자 시작
+  if(na && !nb) return -1; // 숫자가 앞
+  if(!na && nb) return 1;
+  // 둘 다 문자면 로케일 비교 (영문 ABC, 한글 가나다 자동 처리)
+  return da.localeCompare(db, 'ko');
+}
 
 // 수정6: 주소에서 시군 단위 추출
 function extractCity(addr) {
@@ -624,7 +650,7 @@ function farmCard(f){
 // ── 농장 페이지 ──────────────────────────────────────────────────
 function renderFarm(c){
   const farm=DB.farms.find(f=>f.id===S.farmId)||{};
-  const flocks=DB.flocks.filter(f=>f.farmId===S.farmId);
+  const flocks=DB.flocks.filter(f=>f.farmId===S.farmId).sort(sortByDong);
   const cCount=DB.consulting.filter(c=>DB.flocks.find(f=>f.id===c.flockId&&f.farmId===S.farmId)).length;
   const pCount=DB.performance.filter(p=>DB.flocks.find(f=>f.id===p.flockId&&f.farmId===S.farmId)).length;
   const totalCount=flocks.reduce((sum,fk)=>sum+Number(fk.count||0),0);
@@ -1243,10 +1269,10 @@ function renderModal(){
          <select class="form-control" id="fk-breed">${breedOpts(fk.breed||'')}</select>
        </div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${isEdit?(fk.inDate||today()):today()}" placeholder="입추일"></div>
-         <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move" value="${fk.moveDate||''}" placeholder="중추이동일"></div>
+         <div class="form-group"><label class="form-label">입추일</label><input type="date" class="form-control" id="fk-in" value="${isEdit?dateInput(fk.inDate):today()}" placeholder="입추일"></div>
+         <div class="form-group"><label class="form-label">중추이동일</label><input type="date" class="form-control" id="fk-move" value="${dateInput(fk.moveDate)}" placeholder="중추이동일"></div>
        </div>
-       <div class="form-group"><label class="form-label">환우개시일</label><input type="date" class="form-control" id="fk-molt" value="${fk.moltDate||''}" placeholder="환우개시일"></div>
+       <div class="form-group"><label class="form-label">환우개시일</label><input type="date" class="form-control" id="fk-molt" value="${dateInput(fk.moltDate)}" placeholder="환우개시일"></div>
        ${vaxTable(vr)}`,
       `<button class="btn btn-ghost" onclick="closeModal()">취소</button>
        <button class="btn btn-primary" onclick="${isEdit?`updateFlock('${fk.id}')`:'saveFlock()'}"><i class="fas fa-save"></i> 저장</button>`,true
@@ -1261,7 +1287,7 @@ function renderModal(){
     const wk=calcWeek(fk.inDate||today());
     mc.innerHTML=wrap(isEdit?'컨설팅 수정':'컨설팅 등록',isEdit?'pencil-alt':'clipboard-plus',
       `<div class="form-row">
-         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="c-date" value="${isEdit?item.date:today()}"></div>
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="c-date" value="${isEdit?dateInput(item.date):today()}"></div>
          <div class="form-group"><label class="form-label">주령</label><input class="form-control" value="${wk}주령" readonly style="background:var(--gray-50)"></div>
        </div>
        <div class="form-group">
@@ -1357,7 +1383,7 @@ function renderModal(){
     mc.innerHTML=wrap(isEdit?'성적 수정':'성적 입력','chart-line',
       `<div class="notice"><i class="fas fa-info-circle"></i>${d.breed||''} · ${d.dayAge||0}일령 · ${d.weekAge||0}주령</div>
        <div class="form-row">
-         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="p-date" value="${isEdit?p.date:today()}"></div>
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="p-date" value="${isEdit?dateInput(p.date):today()}"></div>
          <div class="form-group"><label class="form-label">체중 (g)</label><input type="number" class="form-control" id="p-weight" value="${isEdit?p.weight||'':''}" placeholder="1800"></div>
        </div>
        <div class="form-row">
@@ -1382,7 +1408,7 @@ function renderModal(){
          <div class="form-group"><label class="form-label">말머리</label>
            <select class="form-control" id="t-tag">${tagOpts}</select>
          </div>
-         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="t-date" value="${isTEdit?tp.date||today():today()}"></div>
+         <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-control" id="t-date" value="${isTEdit?(dateInput(tp.date)||today()):today()}"></div>
        </div>
        <div class="form-group"><label class="form-label">제목 *</label><input class="form-control" id="t-title" value="${isTEdit?tp.title||'':''}" placeholder="게시물 제목"></div>
        <div class="form-group"><label class="form-label">내용</label><textarea class="form-control" id="t-content" style="min-height:110px;resize:none" placeholder="내용을 입력하세요.">${isTEdit?tp.content||'':''}</textarea></div>
@@ -1591,13 +1617,17 @@ async function saveFlock(){
 }
 async function updateFlock(id){
   const fk=DB.flocks.find(x=>x.id===id)||{};
+  // 날짜 필드가 비었으면 기존 값 유지 (초기화 방지)
+  const inVal=document.getElementById('fk-in').value;
+  const moveVal=document.getElementById('fk-move').value;
+  const moltVal=document.getElementById('fk-molt').value;
   const row={...fk,id,
     dong:document.getElementById('fk-dong').value.trim(),
     count:document.getElementById('fk-count').value.replace(/,/g,''),
     breed:document.getElementById('fk-breed').value,
-    inDate:document.getElementById('fk-in').value,
-    moveDate:document.getElementById('fk-move').value,
-    moltDate:document.getElementById('fk-molt').value,
+    inDate:inVal||fk.inDate||'',
+    moveDate:moveVal||fk.moveDate||'',
+    moltDate:moltVal||fk.moltDate||'',
     vaccineNote:JSON.stringify(collectVaxRows())};
   closeModal();await syncSave('flocks',row,API.saveFlock,'계군 정보가 수정되었습니다.',true);
 }
